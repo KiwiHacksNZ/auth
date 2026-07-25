@@ -7,19 +7,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <script>
-      (function() {
-        try {
-          const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const defaultTheme = systemPrefersDark ? "dark" : "light";
-          const savedTheme = localStorage.getItem("theme") || defaultTheme;
-          document.documentElement.dataset.theme = savedTheme;
-        } catch(e) {
-          // Silently fail if localStorage is unavailable
-          document.documentElement.dataset.theme = "light";
-        }
-      })();
-    </script>
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">

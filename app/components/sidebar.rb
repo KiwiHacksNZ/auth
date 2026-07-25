@@ -148,10 +148,6 @@ class Components::Sidebar < Components::Base
     div(class: "sidebar-brand") do
       vite_image_tag("images/kh-square.png", alt: "KiwiHacks logo", class: "brand-logo")
       h1 { I18n.t(".brand") }
-      button(id: "lightswitch", class: "lightswitch-btn", type: "button", "aria-label": "Toggle theme") do
-        span(class: "lightswitch-moon") { inline_icon("moon-fill", size: 16) }
-        span(class: "lightswitch-sun", style: "display: none;") { inline_icon("sun", size: 16) }
-      end
     end
     render Components::EnvironmentBanner.new
   end

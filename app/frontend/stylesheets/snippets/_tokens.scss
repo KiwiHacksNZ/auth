@@ -1,16 +1,6 @@
-@mixin dark-mode {
-  [data-theme="dark"] & { @content; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) & { @content; }
-  }
-}
-
-@mixin dark-mode-root {
-  &[data-theme="dark"] { @content; }
-  @media (prefers-color-scheme: dark) {
-    &:not([data-theme]) { @content; }
-  }
-}
+// Dark mode removed — these mixins are intentionally no-ops so no dark CSS is emitted.
+@mixin dark-mode { }
+@mixin dark-mode-root { }
 
 :root {
   --surface-1: var(--pico-card-background-color);

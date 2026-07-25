@@ -1,10 +1,14 @@
-# Hack Club Auth
+# KiwiHacks Account
 
-This is the Rails codebase powering https://auth.hackclub.com!
+This is the Rails codebase powering KiwiHacks Account, the identity & sign-in platform for [KiwiHacks](https://kiwihacks.org).
+
+## credits
+
+Based on [**Hack Club Auth**](https://github.com/hackclub/auth) (the codebase behind [auth.hackclub.com](https://auth.hackclub.com)) — huge thanks to Hack Club and its contributors for open-sourcing it. KiwiHacks Account is a fork, rebranded and adapted for KiwiHacks.
 
 ## contributing
 
-ask around in [#idv-dev](https://hackclub.slack.com/archives/C09D1E22CF5) or poke [nora](https://hackclub.slack.com/team/U06QK6AG3RD)!
+questions? email [niko@kiwihacks.org](mailto:niko@kiwihacks.org).
 
 avoid questions that can be answered by reading the source code, but otherwise i'd be happy to help you get up to speed :-D
 
@@ -170,5 +174,5 @@ then set `OIDC_SIGNING_KEY` to the contents of `oidc_key.pem` (the whole thing i
 
 ## security
 
-this oughta go without saying, but if you find a security-relevant issue please either contact me directly or go through the security.hackclub.com flow –
+this oughta go without saying, but if you find a security-relevant issue please email [niko@kiwihacks.org](mailto:niko@kiwihacks.org) rather than opening a public issue –
 if you just open an issue or a PR there's a chance a bad actor sees it and exploits it before we can patch or merge.

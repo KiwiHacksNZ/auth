@@ -23,27 +23,36 @@
   }
 }
 
-// KiwiHacks brand palette
-// Accent/buttons (same in light + dark)
-$brand-green: #298951;
-$brand-green-dark: #227a47;
-$brand-green-darker: #1b6339;
-$brand-green-light: #2fa05f;
-$brand-green-lighter: #34b06a;
-// Background (page)
-$brand-cream: #EBE6E3;         // light
-$brand-cream-card: #F3EEEA;    // light card
-$brand-forest: #1A1714;        // dark
-$brand-forest-card-1: #241E1A; // dark card
-$brand-forest-card-2: #1E1815;
-// Surface / info bar
+// KiwiHacks brand palette — matched exactly to vote.kiwihacks.org
+$brand-ink: #132f1e;                       // primary text + dashed border color
+$brand-ink-soft: rgba(19, 47, 30, 0.55);
+$brand-green: #76b070;                      // primary (button bg, ink text on top)
+$brand-green-hover: #88bc82;
+$brand-green-deep: #5c8f57;
+$brand-sky: #91e2ff;                        // secondary
+$brand-sky-bright: #36c6fb;                 // focus/accent
+$brand-sky-soft: rgba(100, 214, 255, 0.3);
+$brand-bg: #eae6e2;                         // page canvas
+$brand-paper: rgba(255, 255, 255, 0.84);    // cards
+$brand-border: 1.5px dashed #132f1e;        // signature dashed border
+$brand-radius-kh: 15px;
+
+// --- Back-compat aliases (older snippets reference these names) ---
+$brand-green-dark: $brand-green;
+$brand-green-darker: $brand-ink;
+$brand-green-light: $brand-green-hover;
+$brand-green-lighter: $brand-green-hover;
+$brand-cream: $brand-bg;
+$brand-cream-card: $brand-paper;
 $brand-info-light: #76B170;
+$brand-nav-light: $brand-sky-soft;
+$brand-text-light: $brand-ink;
+// Dark-mode-only aliases (inert now — dark mixins emit nothing)
+$brand-forest: #1A1714;
+$brand-forest-card-1: #241E1A;
+$brand-forest-card-2: #1E1815;
 $brand-info-dark: #1E2E1C;
-// Nav bar
-$brand-nav-light: #65D7FF;
 $brand-nav-dark: #0D2A35;
-// Primary text
-$brand-text-light: #2C2420;
 $brand-text-dark: #EBE6E3;
 
 $radius-sm: 6px;

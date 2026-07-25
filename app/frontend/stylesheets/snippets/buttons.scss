@@ -4,54 +4,26 @@ input[type="button"],
 [role="button"] {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
-  // Primary button - KiwiHacks green with skeumorphic depth (default for buttons without variant classes)
+  // Primary button — vote.kiwihacks.org style: flat green, dashed ink border, DARK ink text
   &:not(.secondary):not(.outline):not(.danger) {
-    background: linear-gradient(180deg, $brand-green 0%, $brand-green-dark 100%);
-    border: 1px solid $brand-green-darker;
-    box-shadow:
-      0 2px 6px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2),
-      inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-
-    @include dark-mode {
-      background: linear-gradient(180deg, $brand-green 0%, $brand-green-dark 100%);
-      border: 1px solid $brand-green-darker;
-      box-shadow:
-        0 2px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-    }
+    background: $brand-green;
+    border: $brand-border;
+    border-radius: $brand-radius-kh;
+    color: $brand-ink;
+    font-family: "ABeeZee", Figtree, sans-serif;
+    font-weight: 600;
+    box-shadow: none;
 
     &:hover:not(:disabled) {
       transform: translateY(-1px);
-      background: linear-gradient(180deg, $brand-green-light 0%, $brand-green 100%);
-      border-color: $brand-green-dark;
-      box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25),
-        inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-
-      @include dark-mode {
-        background: linear-gradient(180deg, $brand-green-lighter 0%, $brand-green-light 100%);
-        border-color: $brand-green;
-        box-shadow:
-          0 4px 16px rgba(0, 0, 0, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.25),
-          inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-      }
+      background: $brand-green-hover;
+      border: $brand-border;
+      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
     }
     
     &:active:not(:disabled) {
       transform: translateY(0);
-      box-shadow:
-        inset 0 3px 6px rgba(0, 0, 0, 0.3),
-        inset 0 1px 3px rgba(0, 0, 0, 0.2);
-      
-      @include dark-mode {
-        box-shadow:
-          inset 0 3px 6px rgba(0, 0, 0, 0.4),
-          inset 0 1px 3px rgba(0, 0, 0, 0.3);
-      }
+      box-shadow: inset 0 2px 4px rgba(19, 47, 30, 0.2);
     }
   }
 

@@ -29,9 +29,10 @@
 }
 
 @mixin shadow-card {
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.04);
+  border: $brand-border;
+  border-radius: $brand-radius-kh;
+  background: $brand-paper;
+  box-shadow: 0 8px 22px rgba(19, 47, 30, 0.12);
 }
 
 @mixin gradient-light {
@@ -121,28 +122,14 @@
   }
 }
 
-@mixin card($padding: 1.5rem, $radius: $radius-lg, $shadow: true, $border: var(--pico-card-border-color)) {
-  background: linear-gradient(165deg, var(--pico-card-background-color) 0%, var(--surface-2) 100%);
-  border: 1px solid $border;
+@mixin card($padding: 1.5rem, $radius: $brand-radius-kh, $shadow: true, $border: null) {
+  background: $brand-paper;
+  border: $brand-border;
   border-radius: $radius;
   padding: $padding;
-  
-  @include dark-mode {
-    background: linear-gradient(165deg, $brand-forest-card-1 0%, $brand-forest-card-2 100%);
-  }
-  
+
   @if $shadow {
-    box-shadow: 
-      4px 4px 16px rgba(0, 0, 0, 0.04),
-      2px 2px 8px rgba(0, 0, 0, 0.02),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    
-    @include dark-mode {
-      box-shadow: 
-        4px 4px 16px rgba(0, 0, 0, 0.3),
-        2px 2px 8px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
+    box-shadow: 0 8px 22px rgba(19, 47, 30, 0.12);
   }
 }
 

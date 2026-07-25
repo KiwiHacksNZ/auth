@@ -1,5 +1,4 @@
-// $theme-color: "amber";
-// $theme-color: "lime";
+@import url("https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Figtree:wght@400;500;600;700;800&family=Source+Code+Pro:wght@500;700&display=swap");
 $theme-color: "green";
 @import "@picocss/pico/scss/pico";
 @import "./snippets/tokens";
@@ -13,41 +12,40 @@ $theme-color: "green";
 :root {
     --pico-font-family-sans-serif: Figtree, Inter, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue", sans-serif, var(--pico-font-family-emoji) !important;
     --pico-font-size: 16px !important;
-    --pico-line-height: 1.25 !important;
+    --pico-line-height: 1.4 !important;
     --pico-form-element-spacing-vertical: 0.5rem !important;
     --pico-form-element-spacing-horizontal: 1.0rem !important;
-    --pico-border-radius: 10px !important;
+    --pico-border-radius: #{$brand-radius-kh} !important;
     --pico-typography-spacing-vertical: 1.25rem !important;
 
-    // Background + primary text (light)
-    --pico-background-color: #{$brand-cream};
-    --pico-color: #{$brand-text-light};
+    // vote.kiwihacks.org canvas + ink text
+    --pico-background-color: #{$brand-bg};
+    --pico-color: #{$brand-ink};
 
-    // Accent/buttons — #298951, same in light + dark
+    // Primary — light green with DARK ink text on top (vote's button style)
     --pico-primary: #{$brand-green};
-    --pico-primary-rgb: 41, 137, 81;
-    --pico-primary-hover: #{$brand-green-dark};
-    --pico-primary-focus: rgba(41, 137, 81, 0.15);
-    --pico-primary-inverse: #fff;
-
-    @include dark-mode-root {
-        --pico-background-color: #{$brand-forest};
-        --pico-color: #{$brand-text-dark};
-        --pico-primary: #{$brand-green};
-        --pico-primary-rgb: 41, 137, 81;
-        --pico-primary-hover: #{$brand-green-light};
-        --pico-primary-focus: rgba(41, 137, 81, 0.25);
-        --pico-primary-inverse: #fff;
-    }
+    --pico-primary-rgb: 118, 176, 112;
+    --pico-primary-hover: #{$brand-green-hover};
+    --pico-primary-focus: rgba(54, 198, 251, 0.25);
+    --pico-primary-inverse: #{$brand-ink};
 }
 
+// Signature radial sky-blue glow at the top of the page
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(145, 226, 255, 0.18), transparent 42%);
+}
+body > * { position: relative; z-index: 1; }
+
 h1, h2, h3, h4, h5, h6 {
-  letter-spacing: -0.025em;
+  font-family: "ABeeZee", Figtree, sans-serif;
+  letter-spacing: 0.01em;
   font-weight: 700;
-  
-  @include dark-mode {
-    color: #{$brand-text-dark};
-  }
+  color: #{$brand-ink};
 }
 
 h1 { font-size: 2.25rem; }
@@ -94,30 +92,17 @@ input[type="url"],
 input[type="number"],
 select,
 textarea {
-  box-shadow: 
-    inset 0 1px 2px rgba(0, 0, 0, 0.06),
-    0 1px 0 rgba(255, 255, 255, 0.4);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 10px;
-  
-  @include dark-mode {
-    box-shadow: 
-      inset 0 1px 2px rgba(0, 0, 0, 0.3),
-      0 1px 0 rgba(255, 255, 255, 0.03);
-  }
-  
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1.5px solid rgba(19, 47, 30, 0.35) !important;
+  color: #{$brand-ink} !important;
+  border-radius: 13px !important;
+  box-shadow: none;
+  transition: all 0.18s ease;
+
   &:focus {
-    box-shadow: 
-      inset 0 1px 2px rgba(0, 0, 0, 0.06),
-      0 1px 0 rgba(255, 255, 255, 0.4),
-      0 0 0 3px rgba(var(--pico-primary-rgb), 0.25);
-    
-    @include dark-mode {
-      box-shadow: 
-        inset 0 1px 2px rgba(0, 0, 0, 0.3),
-        0 1px 0 rgba(255, 255, 255, 0.03),
-        0 0 0 3px rgba(var(--pico-primary-rgb), 0.35);
-    }
+    border-color: #{$brand-sky-bright} !important;
+    box-shadow: 0 0 0 3px rgba(54, 198, 251, 0.2);
+    outline: none;
   }
 }
 

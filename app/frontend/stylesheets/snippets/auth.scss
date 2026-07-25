@@ -79,25 +79,13 @@
 }
 
 .auth-card {
-  background: linear-gradient(165deg, #ffffff 0%, $brand-cream-card 100%);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: $radius-xl;
+  background: $brand-paper;
+  border: $brand-border;
+  border-radius: $brand-radius-kh;
   padding: 2.5rem;
   width: 100%;
   max-width: 610px;
-  box-shadow:
-    4px 4px 16px rgba(0, 0, 0, 0.04),
-    2px 2px 8px rgba(0, 0, 0, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-
-  @include dark-mode {
-    background: linear-gradient(165deg, $brand-forest-card-1 0%, $brand-forest-card-2 100%);
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow:
-      4px 4px 16px rgba(0, 0, 0, 0.3),
-      2px 2px 8px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
+  box-shadow: 0 8px 22px rgba(19, 47, 30, 0.12);
 
   header {
     text-align: center;

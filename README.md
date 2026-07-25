@@ -75,7 +75,7 @@ if you want hot reload on css & js, also run `bin/vite dev` in another terminal.
 ### logging in to the backend
 
 1. go to http://localhost:3000/login
-2. enter `identity@hackclub.com`
+2. enter `dev@kiwihacks.org`
 3. grab the verification code from http://localhost:3000/letter_opener
 4. enter your TOTP code (from the authenticator app you set up during seeding)
 5. head to http://localhost:3000/backend

@@ -8,7 +8,7 @@ return unless Rails.env.development?
 puts "🌱 seeding development data..."
 
 # Create a test identity
-identity = Identity.find_or_initialize_by(primary_email: "identity@hackclub.com")
+identity = Identity.find_or_initialize_by(primary_email: "dev@kiwihacks.org")
 
 if identity.new_record?
   identity.assign_attributes(
@@ -56,7 +56,7 @@ puts "=" * 60
 puts "dev account ready!"
 puts "=" * 60
 puts ""
-puts "  email: identity@hackclub.com"
+puts "  email: dev@kiwihacks.org"
 puts "  totp secret: #{totp.secret}"
 puts ""
 puts "add this secret to your authenticator app, or use this URI:"
@@ -65,7 +65,7 @@ puts "  #{totp.provisioning_uri}"
 puts ""
 puts "login flow:"
 puts "  1. go to http://localhost:3000/login"
-puts "  2. enter: identity@hackclub.com"
+puts "  2. enter: dev@kiwihacks.org"
 puts "  3. grab the code from http://localhost:3000/letter_opener"
 puts "  4. enter the TOTP code from your authenticator"
 puts "  5. go to http://localhost:3000/backend"

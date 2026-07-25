@@ -2,7 +2,7 @@ module OnboardingScenarios
   class Beest < Base
     def self.slug = "beest"
 
-    def title = "Welcome to Hack Club Beest"
+    def title = "Welcome to KiwiHacks Beest"
 
     def form_fields = [ :first_name, :last_name, :primary_email, :birthday, :country ]
 

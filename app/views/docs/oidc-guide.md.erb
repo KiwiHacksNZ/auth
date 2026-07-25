@@ -1,6 +1,6 @@
 ---
 title: OpenID Connect
-description: Use OIDC for authentication with Hack Club Auth
+description: Use OIDC for authentication with KiwiHacks Account
 category: Developer
 order: 9
 ---
@@ -114,11 +114,11 @@ The <code>birthdate</code> scope is separate from <code>profile</code> intention
 </p>
 </div>
 
-### Hack Club Custom Scopes
+### KiwiHacks Custom Scopes
 
 | Scope | Claims | Description |
 |-------|--------|-------------|
-| `slack_id` | `slack_id` | The user's Hack Club Slack ID |
+| `slack_id` | `slack_id` | The user's KiwiHacks Slack ID |
 | `verification_status` | `verification_status`, `ysws_eligible` | Verification status and YSWS eligibility |
 
 ### Example ID Token Claims
@@ -192,7 +192,7 @@ Most languages have OIDC client libraries that handle the complexity for you. Po
 
 ### Example: Better Auth
 
-[Better Auth](https://better-auth.com) is a popular TypeScript authentication library. Here's how to add Hack Club Auth as an OIDC provider:
+[Better Auth](https://better-auth.com) is a popular TypeScript authentication library. Here's how to add KiwiHacks Account as an OIDC provider:
 
 **1. Install the plugin:**
 

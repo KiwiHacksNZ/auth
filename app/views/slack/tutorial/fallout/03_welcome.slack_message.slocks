@@ -33,7 +33,7 @@ when 1
   header "✨ you're already in!"
 
   section <<~TEXT, markdown: true
-    Oh! Um, it looks like you're already a full member of Hack Club! That's wonderful!
+    Oh! Um, it looks like you're already a full member of KiwiHacks! That's wonderful!
 
     I'm so glad you're here. How have you been enjoying the community? Have you made any new friends yet?
   TEXT
@@ -77,7 +77,7 @@ when 3
   header "oh, hello!"
 
   section <<~TEXT, markdown: true
-    You keep coming back here! I hope that means you're enjoying Hack Club. Or... um, did you need something? I'm here if you want to talk!
+    You keep coming back here! I hope that means you're enjoying KiwiHacks. Or... um, did you need something? I'm here if you want to talk!
 
     Remember, you can always ask questions in the channels, and everyone will be happy to help. We're all friends here! 💚
   TEXT

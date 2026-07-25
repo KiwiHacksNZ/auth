@@ -4,7 +4,7 @@ module SpecialAppCards
   class Game < Base
     def visible? = Flipper.enabled?(:app_card_hctg_2026_03_19, identity)
 
-    def friendly_name = "Hack Club: The Game"
+    def friendly_name = "KiwiHacks: The Game"
 
     def tagline = "Build projects, then compete in a scavenger hunt adventure game across Manhattan"
 

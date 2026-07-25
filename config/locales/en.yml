@@ -646,7 +646,7 @@ en:
       submit_documents: Submit Documents
     choose:
       title: Verify your identity
-      subtitle: "To participate in Hack Club programs and receive hardware, we need to confirm you're a real person."
+      subtitle: "To participate in KiwiHacks programs and receive hardware, we need to confirm you're a real person."
       instant_title: Instant verification
       instant_description: "Scan a government-issued ID and take a quick selfie. Usually takes about 30 seconds."
       instant_cta: Verify with ID →
@@ -655,7 +655,7 @@ en:
       student_id_cta: Use student ID →
     persona:
       title: Verify your identity
-      subtitle: "To participate in Hack Club programs and receive hardware, we need to confirm you're a real person. This is how we keep the community safe."
+      subtitle: "To participate in KiwiHacks programs and receive hardware, we need to confirm you're a real person. This is how we keep the community safe."
       hero_title: "Here's how it works"
       hero_description_html: "Our age and identity check is handled by <a href=\"https://withpersona.com/privacy\" target=\"_blank\">Persona</a>, an independent verification company. It's fast — usually under a minute."
       steps:

@@ -1,10 +1,10 @@
 module OnboardingScenarios
   class SlackJoin < Base
-    # Disabled for KiwiHacks: routes through Hack Club's Slack workspace/channel IDs.
+    # Disabled for KiwiHacks: routes through KiwiHacks' Slack workspace/channel IDs.
     # Unset the slug so /join/slack 404s instead of reaching this scenario.
     def self.slug = nil
 
-    def title = "Join the Hack Club Slack!"
+    def title = "Join the KiwiHacks Slack!"
 
     def form_fields = [ :first_name, :last_name, :primary_email, :birthday, :country ]
 

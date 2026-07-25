@@ -1,11 +1,11 @@
 ---
 title: OAuth Guide
-description: Integrate Hack Club Auth authentication into your app
+description: Integrate KiwiHacks Account authentication into your app
 category: Developer
 order: 10
 ---
 
-This guide will walk you through implementing OAuth 2.0 authentication with Hack Club Auth.
+This guide will walk you through implementing OAuth 2.0 authentication with KiwiHacks Account.
 
 <div class="banner info">
 <b>Looking for OIDC?</b>
@@ -29,7 +29,7 @@ If you just need to authenticate users and get their identity, check out the <%=
     Once you've developed your integration, poke Nora to promote it to <code>community_trusted</code>.
 
     <br/><br/>
-    If you work for Hack Club HQ and are building an official program, you'll be able to select the <code>hq_official</code> trust level.
+    If you work for KiwiHacks and are building an official program, you'll be able to select the <code>hq_official</code> trust level.
     This means no warning banner will be shown when your users authorize your app.
 </p>
 </div>
@@ -52,7 +52,7 @@ Construct an authorization URL with these parameters:
 <p>
     The scopes you request will determine what user information your app will be able to access. <br/>
     If you're a community member, you can request the following scopes: <code><%= Program::COMMUNITY_ALLOWED_SCOPES.join(" ") %></code>. <br/>
-    If you work for Hack Club HQ and are building an official program, you will have access to additional scopes, like <code>basic_info</code> and <code>addresses</code>.
+    If you work for KiwiHacks and are building an official program, you will have access to additional scopes, like <code>basic_info</code> and <code>addresses</code>.
     <br/>
     Talk to Nora if you need anything scarier than those.
 </p>
@@ -134,7 +134,7 @@ Each time you refresh an access token, you'll receive a new refresh token. The p
 
 ### Step 5: Make authenticated API requests
 
-Include the access token in the `Authorization` header when making requests to the <a href="/docs/api">Hack Club Auth API</a>:
+Include the access token in the `Authorization` header when making requests to the <a href="/docs/api">KiwiHacks Account API</a>:
 
 ```
 Authorization: Bearer idntk.mraowj2z72e1x8i2a60o88j3h7d0f1

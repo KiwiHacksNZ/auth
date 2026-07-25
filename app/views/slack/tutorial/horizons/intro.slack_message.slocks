@@ -1,4 +1,4 @@
-image "https://user-cdn.hackclub-assets.com/019d53df-f364-7164-84f4-005bb966c2dd/image.png", "Welcome to Hack Club!"
+image "https://user-cdn.hackclub-assets.com/019d53df-f364-7164-84f4-005bb966c2dd/image.png", "Welcome to KiwiHacks!"
 
 section <<~EOFD, markdown: true
   Right now you can only see a few channels related to Horizons. 

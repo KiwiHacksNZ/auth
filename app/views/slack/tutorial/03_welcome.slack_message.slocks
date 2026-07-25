@@ -12,9 +12,9 @@ is_full_member = scenario&.slack_user_type == :full_member
 case @identity.promote_click_count
 when 0
   if is_full_member
-    image "https://cdn.hackclub.com/019c297b-5d42-7256-a5e5-7d8f9f7adcd5/welcome.gif", "Welcome to Hack Club!"
+    image "https://cdn.hackclub.com/019c297b-5d42-7256-a5e5-7d8f9f7adcd5/welcome.gif", "Welcome to KiwiHacks!"
 
-    header "🎉 welcome to Hack Club!"
+    header "🎉 welcome to KiwiHacks!"
 
     section <<~TEXT, markdown: true
       You're in! All channels are open to you.
@@ -56,7 +56,7 @@ when 1
   header "✨ you're already in!"
 
   section <<~TEXT, markdown: true
-    Oh! Um, it looks like you're already a full member of Hack Club! That's wonderful!
+    Oh! Um, it looks like you're already a full member of KiwiHacks! That's wonderful!
 
     The Skull's flames flicker warmly.
 
@@ -99,7 +99,7 @@ when 3
   section <<~TEXT, markdown: true
     The Skull's eye sockets glow gently.
 
-    You keep coming back here! I hope that means you're enjoying Hack Club. Or... um, did you need something? I'm here if you want to talk!
+    You keep coming back here! I hope that means you're enjoying KiwiHacks. Or... um, did you need something? I'm here if you want to talk!
 
     Remember, you can always ask questions in the channels, and everyone will be happy to help. We're all friends here! 💚
   TEXT

@@ -1,6 +1,12 @@
-// Dark mode removed — these mixins are intentionally no-ops so no dark CSS is emitted.
-@mixin dark-mode { }
-@mixin dark-mode-root { }
+// Dark mode removed. These mixins still accept a content block (so existing
+// `@include dark-mode { ... }` call sites compile), but `@if false` drops it —
+// no dark CSS is ever emitted.
+@mixin dark-mode {
+  @if false { @content; }
+}
+@mixin dark-mode-root {
+  @if false { @content; }
+}
 
 :root {
   --surface-1: var(--pico-card-background-color);

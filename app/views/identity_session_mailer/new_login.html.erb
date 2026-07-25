@@ -21,11 +21,6 @@
   </b>
 </p>
 
-<% if @session.latitude %>
-  <img
-    src="https://maps.hackclub.com/api/shipping?latitude=<%= @session.latitude %>&longitude=<%= @session.longitude %>&size=640x320"
-    style="border-radius: 0.5rem; width: 80%">
-<% end %>
 
 <%= render "mailers/security_warning" %>
 

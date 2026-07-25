@@ -146,7 +146,7 @@ class Components::Sidebar < Components::Base
 
   def render_sidebar_brand
     div(class: "sidebar-brand") do
-      vite_image_tag("images/hc-square.png", alt: "Hack Club logo", class: "brand-logo")
+      vite_image_tag("images/kh-square.png", alt: "KiwiHacks logo", class: "brand-logo")
       h1 { I18n.t(".brand") }
       button(id: "lightswitch", class: "lightswitch-btn", type: "button", "aria-label": "Toggle theme") do
         span(class: "lightswitch-moon") { inline_icon("moon-fill", size: 16) }

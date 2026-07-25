@@ -19,7 +19,7 @@ class IdentitySession < ApplicationRecord
     if identity.sessions.size == 1
       # First login - no need to notify
     elsif fingerprint.present? && identity.sessions.where("created_at > ?", 6.months.ago).excluding(self).where(fingerprint:).none?
-      IdentitySessionMailer.new_login(self).deliver_later
+      LoopsNewLoginJob.perform_later(id)
     end
   end
 

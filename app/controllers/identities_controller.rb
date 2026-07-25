@@ -83,7 +83,7 @@ class IdentitiesController < ApplicationController
 
             if age >= 19 && !@onboarding_scenario.accepts_adults && !Flipper.enabled?(:allow_adult_registration_2026_05_28)
               track_event("signup.age_rejected", scenario: analytics_scenario, rejection_type: "too_old")
-              @age_restriction = "Hack Club is a community for teenagers. <br/>Unfortunately, you are not eligible to join.".html_safe
+              @age_restriction = "KiwiHacks is a community for teenagers. <br/>Unfortunately, you are not eligible to join.".html_safe
               @identity = Identity.new(@prefill_attributes.merge(attrs))
               render :new, status: :unprocessable_entity
               return
@@ -136,7 +136,7 @@ class IdentitiesController < ApplicationController
 
             login_code = Identity::V2LoginCode.create!(identity: @identity)
             if defined?(IdentityMailer)
-                IdentityMailer.v2_login_code(login_code).deliver_later
+                LoopsLoginCodeJob.perform_later(login_code.id)
             end
 
             redirect_to login_attempt_path(id: login_attempt.to_param), status: :see_other
@@ -227,7 +227,7 @@ class IdentitiesController < ApplicationController
             end
 
             current_identity.update!(use_two_factor_authentication: true)
-            TwoFactorMailer.required_authentication_enabled(current_identity).deliver_later
+            LoopsTwoFactorRequiredEnabledJob.perform_later(current_identity.id)
 
             @totp = current_identity.totp
             if request.headers["HX-Request"]

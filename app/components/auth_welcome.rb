@@ -25,7 +25,7 @@ class Components::AuthWelcome < Components::Base
 
   def render_brand
     div(class: "auth-brand") do
-      vite_image_tag "images/hc-square.png", alt: "Hack Club logo", class: "brand-logo"
+      vite_image_tag "images/kh-square.png", alt: "KiwiHacks logo", class: "brand-logo"
       span(class: "brand-plus") { "×" }
       vite_image_tag @logo_path, alt: "Logo", class: "brand-logo brand-logo--custom"
     end
@@ -81,7 +81,7 @@ class Components::AuthWelcome < Components::Base
     footer(class: "welcome-footer") do
       p do
         plain t("logins.welcome.trouble_help")
-        a(href: "mailto:auth@hackclub.com") { "auth@hackclub.com" }
+        a(href: "mailto:niko@kiwihacks.org") { "niko@kiwihacks.org" }
         plain "."
       end
 

@@ -23,7 +23,7 @@ class Identity::BackupCode < ApplicationRecord
 
       after do
         identity.create_activity :use_backup_code, owner: identity, recipient: identity
-        IdentityBackupCodeMailer.code_used(identity).deliver_later
+        LoopsBackupCodeUsedJob.perform_later(identity.id)
       end
     end
     event :mark_discarded do

@@ -1,5 +1,5 @@
 class Identity::TOTP < ApplicationRecord
-  ISSUER = "HC_IDp_#{Rails.env}"
+  ISSUER = "KiwiHacks_#{Rails.env}"
 
   include TwoFactorAuthenticatable
 

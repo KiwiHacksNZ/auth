@@ -288,7 +288,7 @@ class LoginsController < ApplicationController
 
     def send_v2_login_code(identity, attempt = nil)
         code = Identity::V2LoginCode.create!(identity: identity, ip_address: request.remote_ip, user_agent: request.user_agent)
-        IdentityMailer.v2_login_code(code).deliver_later if defined?(IdentityMailer)
+        LoopsLoginCodeJob.perform_later(code.id)
     end
 
     def handle_post_verification_redirect

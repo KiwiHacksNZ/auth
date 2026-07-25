@@ -1,124 +1,124 @@
 en:
   mailer_common:
-    not_you: "If this wasn't you, please review your account security settings immediately and contact us at auth@hackclub.com."
-    signature: "– Hack Club"
+    not_you: "If this wasn't you, please review your account security settings immediately and contact us at niko@kiwihacks.org."
+    signature: "– KiwiHacks"
   identity_mailer:
     v2_login_code:
-      subject: "%{code} is your Hack Club login code"
+      subject: "%{code} is your KiwiHacks login code"
       greeting: "Hey %{first_name}!"
-      body: "Here's the code to sign into your Hack Club Account:"
+      body: "Here's the code to sign into your KiwiHacks Account:"
       triple_click: "(triple-click to copy it quicker!)"
       expiry: "This code expires in 30 minutes."
       not_you: "Didn't request this? You can safely ignore this email."
-      signature: "– Hack Club"
+      signature: "– KiwiHacks"
     approved_but_ysws_ineligible:
-      subject: "[Hack Club] Your identity verification"
+      subject: "[KiwiHacks] Your identity verification"
       greeting: "Hey %{first_name},"
       body: "Your documents have been approved! However, you're over 18, which is outside the age range for our You Ship, We Ship grant programs."
-      signature: "Best,\nthe Hack Club team"
+      signature: "Best,\nthe KiwiHacks team"
   identity_backup_code_mailer:
     code_used:
-      subject: "[Hack Club] A backup code was used on your account"
+      subject: "[KiwiHacks] A backup code was used on your account"
       greeting: "Hey %{first_name},"
-      body: "A backup code was just used to sign into your Hack Club account."
+      body: "A backup code was just used to sign into your KiwiHacks account."
       action: "If this was you, no action is needed. Consider regenerating your backup codes if you're running low."
     codes_regenerated:
-      subject: "[Hack Club] Your backup codes have been regenerated"
+      subject: "[KiwiHacks] Your backup codes have been regenerated"
       greeting: "Hey %{first_name},"
-      body: "New backup codes were just generated for your Hack Club account. Your previous codes are no longer valid."
+      body: "New backup codes were just generated for your KiwiHacks account. Your previous codes are no longer valid."
   identity_session_mailer:
     new_login:
-      subject: "[Hack Club] New sign-in to your account"
+      subject: "[KiwiHacks] New sign-in to your account"
       greeting: "Hey %{first_name}."
-      body: "We're writing to let you know that you just signed into your Hack Club account from a new device"
+      body: "We're writing to let you know that you just signed into your KiwiHacks account from a new device"
       ip_label: "IP address:"
       unknown: "Unknown"
   two_factor_mailer:
     authentication_method_enabled:
-      subject: "[Hack Club] Authentication method enabled"
+      subject: "[KiwiHacks] Authentication method enabled"
       greeting: "Hey %{first_name},"
-      body: "An authentication method has been enabled on your Hack Club account."
+      body: "An authentication method has been enabled on your KiwiHacks account."
     authentication_method_disabled:
-      subject: "[Hack Club] Authentication method disabled"
+      subject: "[KiwiHacks] Authentication method disabled"
       greeting: "Hey %{first_name},"
-      body: "An authentication method has been removed from your Hack Club account."
+      body: "An authentication method has been removed from your KiwiHacks account."
     required_authentication_enabled:
-      subject: "[Hack Club] Two-factor authentication is now required"
+      subject: "[KiwiHacks] Two-factor authentication is now required"
       greeting: "Hey %{first_name},"
-      body: "Two-factor authentication is now required for your Hack Club account. You'll need to enter a code from your authentication method when signing in."
+      body: "Two-factor authentication is now required for your KiwiHacks account. You'll need to enter a code from your authentication method when signing in."
     required_authentication_disabled:
-      subject: "[Hack Club] Two-factor authentication requirement removed"
+      subject: "[KiwiHacks] Two-factor authentication requirement removed"
       greeting: "Hey %{first_name},"
-      body: "The two-factor authentication requirement has been removed from your Hack Club account. Your authentication methods are still available if you want to re-enable this requirement later."
+      body: "The two-factor authentication requirement has been removed from your KiwiHacks account. Your authentication methods are still available if you want to re-enable this requirement later."
   email_change_mailer:
     verify_old_email:
-      subject: "[Hack Club] Confirm your email change request"
+      subject: "[KiwiHacks] Confirm your email change request"
       greeting: "Hey %{first_name},"
-      body: "We received a request to change the email address on your Hack Club account:"
+      body: "We received a request to change the email address on your KiwiHacks account:"
       instruction: "To approve this change, click the button below."
       instruction_text: "To approve this change, use the link below."
       verify_button: "Yes, change my email"
       expiry: "This link expires in 24 hours."
       not_you_title: "Didn't request this?"
-      not_you_body_html: "Someone may have access to your account.<br/> <a href='%{cancel_url}'>Cancel this request</a>, review your sessions, and contact <a href='mailto:auth@hackclub.com'>auth@hackclub.com</a>."
-      not_you_body_text: "Someone may have access to your account. Cancel this request using the link below, review your sessions, and contact auth@hackclub.com."
-      signature: "– Hack Club"
+      not_you_body_html: "Someone may have access to your account.<br/> <a href='%{cancel_url}'>Cancel this request</a>, review your sessions, and contact <a href='mailto:niko@kiwihacks.org'>niko@kiwihacks.org</a>."
+      not_you_body_text: "Someone may have access to your account. Cancel this request using the link below, review your sessions, and contact niko@kiwihacks.org."
+      signature: "– KiwiHacks"
     verify_new_email:
-      subject: "[Hack Club] Verify your new email address"
+      subject: "[KiwiHacks] Verify your new email address"
       greeting: "Hey %{first_name},"
       body: "You're almost done changing your email address:"
       instruction: "Click the button below to verify you have access to this email."
       verify_button: "Verify this email"
       expiry: "This link expires in 24 hours."
       not_you: "Didn't request this? You can safely ignore this email."
-      signature: "– Hack Club"
+      signature: "– KiwiHacks"
     email_changed_notification:
-      subject: "[Hack Club] Your email address has been changed"
+      subject: "[KiwiHacks] Your email address has been changed"
       greeting: "Hey %{first_name},"
-      body: "Your Hack Club account email was successfully changed:"
+      body: "Your KiwiHacks account email was successfully changed:"
       not_you_title: "Didn't make this change?"
-      not_you_body_html: "Your account may be compromised.<br/> Contact us at <a href='mailto:auth@hackclub.com'>auth@hackclub.com</a> and review your sessions."
-      not_you_body_text: "Your account may be compromised.\n Contact us at auth@hackclub.com and review your sessions."
-      signature: "– Hack Club"
+      not_you_body_html: "Your account may be compromised.<br/> Contact us at <a href='mailto:niko@kiwihacks.org'>niko@kiwihacks.org</a> and review your sessions."
+      not_you_body_text: "Your account may be compromised.\n Contact us at niko@kiwihacks.org and review your sessions."
+      signature: "– KiwiHacks"
   verification_mailer:
     approved:
-      subject: "[Hack Club] Your identity verification has been approved!"
+      subject: "[KiwiHacks] Your identity verification has been approved!"
       greeting: "Hey %{first_name}!"
       body: "Your documents have been approved — you're all set!"
-      signature: "Best,\nthe Hack Club team"
+      signature: "Best,\nthe KiwiHacks team"
     rejected_amicably:
-      subject: "[Hack Club] Action required: Please resubmit verification"
+      subject: "[KiwiHacks] Action required: Please resubmit verification"
       greeting: "Hey %{first_name},"
       body: "We weren't able to approve your verification on the first try."
       reason_intro: "Here's what we found:"
       resubmit_cta: "Resubmit your documents"
       help: "Need help? If you're 18 or under, ask in #identity-help on Slack. You can also reply directly to this email."
-      signature: "Thanks,\nthe Hack Club team"
+      signature: "Thanks,\nthe KiwiHacks team"
     rejected_permanently:
-      subject: "[Hack Club] We weren't able to verify your identity"
+      subject: "[KiwiHacks] We weren't able to verify your identity"
       greeting: "Hey %{first_name},"
       body: "Unfortunately, we weren't able to approve your verification."
       reason_intro: "Here's what we found:"
       no_resubmit: "You're unable to resubmit at this time."
       contact: "If you have questions, please reply to this email."
-      signature: "Thanks,\nthe Hack Club team"
+      signature: "Thanks,\nthe KiwiHacks team"
     created:
-      subject: "[Hack Club] Your verification is being reviewed"
+      subject: "[KiwiHacks] Your verification is being reviewed"
       greeting: "Hey %{first_name}!"
       body: "We got your documents and they're in the queue for review. We'll let you know as soon as we've had a look!"
-      signature: "Best,\nthe Hack Club team"
+      signature: "Best,\nthe KiwiHacks team"
   errors:
     feature_not_available: "This feature is not currently available."
     attributes:
       primary_email:
-        temporary: "seems to be a disposable email address. Please use a permanent email address to create your account (or if this is a false positive email nora@hackclub.com!)"
+        temporary: "seems to be a disposable email address. Please use a permanent email address to create your account (or if this is a false positive email niko@kiwihacks.org!)"
         invalid_format: "is not shaped like a valid email address. Please check the format and try again."
         no_mx_record: "doesn't seem to have a valid mail server? Please check the domain and try again."
   activerecord:
     attributes:
       backend_user:
         slack_id: Slack ID
-  brand: Hack Club Auth
+  brand: KiwiHacks Auth
   home:
     apps:
       heading: Where do you want to go today?
@@ -173,7 +173,7 @@ en:
         other: "%{count} apps"
       blank_slate:
         title: No OAuth apps yet
-        cta: Create an app to start authenticating with Hack Club!
+        cta: Create an app to start authenticating with KiwiHacks!
         create: app me up.
       not_found: "App not found (or you're unauthorized?)"
     show:
@@ -261,7 +261,7 @@ en:
       scopes_locked_by_higher_permission: "Managed by a higher-permission user:"
       admin_settings_heading: Admin Settings
       byline: Consent Screen Byline
-      byline_hint: Shown on the consent screen for HQ official apps. Leave blank to default to "Hack Club HQ".
+      byline_hint: Shown on the consent screen for HQ official apps. Leave blank to default to "KiwiHacks HQ".
       byline_placeholder: "@nora, @msw, @zrl"
       onboarding_scenario: Onboarding Scenario
       onboarding_default: "(default)"
@@ -270,7 +270,7 @@ en:
       whoami_enabled: Enable silent email prefill (whoami)
       whoami_enabled_hint: Lets the allowed site below silently read a logged-in visitor's email + first name (via /api/external/whoami) to prefill its forms. Off by default.
       whoami_allowed_origin: Whoami allowed origin
-      whoami_allowed_origin_placeholder: https://program.hackclub.com
+      whoami_allowed_origin_placeholder: https://program.kiwihacks.org
       whoami_allowed_origin_hint: Exact browser Origin permitted to call whoami - scheme + host, no path or trailing slash. Only this origin receives identity.
       update: Update App
       cancel: Cancel
@@ -337,8 +337,8 @@ en:
       new:
         prompt: Authorize %{client_name} to use your account?
         able_to: "This application will be able to:"
-        official_byline: "This is an official Hack Club program run by %{byline}."
-        official_byline_default: Hack Club HQ
+        official_byline: "This is an official KiwiHacks program run by %{byline}."
+        official_byline_default: KiwiHacks HQ
         permissions_details: What account info will be shared?
         deny: Deny
         authorize: Authorize →
@@ -346,10 +346,10 @@ en:
         banners:
           community_untrusted:
             title: Community Application
-            message_html: This application is created by a community member and has not been officially verified by Hack Club HQ. <br/> Make sure you trust the author with the information above.
+            message_html: This application is created by a community member and has not been officially verified by KiwiHacks HQ. <br/> Make sure you trust the author with the information above.
           community_trusted:
             title: Community Application
-            message_html: This application is created by a community member. <br/> Hack Club HQ has reviewed it, but please make sure you trust the author with the information above.
+            message_html: This application is created by a community member. <br/> KiwiHacks HQ has reviewed it, but please make sure you trust the author with the information above.
         scopes:
           basic_info:
             title: See basic information about you
@@ -403,7 +403,7 @@ en:
       super_secret_settings: "Super secret settings"
       saml_debug: "debug your SAML assertions?"
     new:
-      already_have: Already have a Hack Club Auth account?
+      already_have: Already have a KiwiHacks Auth account?
       log_in: Log in here
       not_necessarily_legal_name: not necessarily your legal name, what do people usually call you?
       email_code: We'll send a one-time code to this address.
@@ -425,14 +425,14 @@ en:
   logins:
     new:
       title: Welcome back!
-      subtitle: Sign in to Hack Club Auth
+      subtitle: Sign in to KiwiHacks Auth
       email_label: Email address
       continue: Continue
       no_account: Don't have an account?
       signup: Make one
       free: ", it's free!"
     welcome:
-      email_help: "This'll be the email you use across Hack Club. We recommend using your personal email. If you already have a Hack Club account, just put your existing email in here :-)"
+      email_help: "This'll be the email you use across KiwiHacks. We recommend using your personal email. If you already have a KiwiHacks account, just put your existing email in here :-)"
       continue: Continue
       trouble_help: "If you're having trouble logging in, please email "
     email:
@@ -472,8 +472,8 @@ en:
       text: Logging you in...
   static_pages:
     welcome:
-      title: Hack Club Auth
-      subtitle: One account for Slack, Hack Club, and beyond.
+      title: KiwiHacks Auth
+      subtitle: One account for KiwiHacks and beyond.
       cta_create: Create Your Account →
       cta_signin: Sign In
       security_link: Security
@@ -681,7 +681,7 @@ en:
       privacy_note_html: "Your photos are encrypted and access by staff is logged. <a href=\"https://withpersona.com/security\" target=\"_blank\">About our verification provider</a>."
       cant_do_this: "Don't have your ID on you?"
       fallback_prompt: Upload a document manually instead
-      contact_html: "Having trouble? Email us at <a href=\"mailto:identity@hackclub.com\">identity@hackclub.com</a>."
+      contact_html: "Having trouble? Email us at <a href=\"mailto:niko@kiwihacks.org\">niko@kiwihacks.org</a>."
     student_id:
       hero_description_html: "Upload your student ID and a recent school transcript. Our team will review them within 1–2 business days."
       steps:
@@ -724,7 +724,7 @@ en:
         title_verified: "You're verified — but not eligible for YSWS"
         subtitle_ysws: You can now participate in programs and compete for prizes
         subtitle_verified: "Your identity has been confirmed, but our records show you're 18 or older. YSWS programs are only open to participants under 18."
-        contact_verified_html: "Think this is wrong? Email us at <a href=\"mailto:identity@hackclub.com\">identity@hackclub.com</a>."
+        contact_verified_html: "Think this is wrong? Email us at <a href=\"mailto:niko@kiwihacks.org\">niko@kiwihacks.org</a>."
         verified_ago: Verified %{time} ago
         back_to_home: Back to Home
       ineligible:
@@ -736,13 +736,13 @@ en:
           rejected: Your verification was permanently rejected
           restricted: This account is not eligible for verification
           unable: You're not eligible for verification at this time
-        contact: Questions? Email identity@hackclub.com
+        contact: Questions? Email niko@kiwihacks.org
         back_to_home: Back to Home
       needs_submission:
         locked:
           title: Let's get you verified
           subtitle: "You've used your available verification attempts, but don't worry — we can help"
-          contact_html: "Email us at <a href=\"mailto:identity@hackclub.com\">identity@hackclub.com</a> and we'll get you sorted out."
+          contact_html: "Email us at <a href=\"mailto:niko@kiwihacks.org\">niko@kiwihacks.org</a> and we'll get you sorted out."
         resubmission:
           title: Please resubmit your documents
           subtitle: We found some issues with your previous submission that you can fix
@@ -803,7 +803,7 @@ en:
       success: Email change request cancelled.
       already_completed: This request has already been completed or cancelled.
   auth:
-    sign_in_or_create: "Sign in or create a Hack Club Auth account to continue"
+    sign_in_or_create: "Sign in or create a KiwiHacks Auth account to continue"
   portal:
     verifications:
       pending:

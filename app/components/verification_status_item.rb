@@ -6,6 +6,7 @@ class Components::VerificationStatusItem < Components::Base
   def status = @identity.verification_status
 
   def show?
+    return false unless @identity.identity_verification_enabled?
     # Show if not verified and not ineligible
     status != "verified"
   end

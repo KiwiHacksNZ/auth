@@ -9,7 +9,7 @@ module OnboardingScenarios
           Flipper.enabled?(:full_user_open_floodgates_2026_04_06, @identity) ? :full_member : :multi_channel_guest
         end
 
-        def next_action = :slack
+        def next_action = :home
 
         def slack_onboarding_flow = :internal_tutorial
 

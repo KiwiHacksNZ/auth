@@ -57,7 +57,7 @@ module OnboardingScenarios
     def slack_onboarding_flow = :internal_tutorial
 
     # Whether this scenario should provision a Slack account
-    def should_create_slack? = true
+    def should_create_slack? = false
 
     # Whether Ralsei should message users via DM instead of a channel
     def use_dm_channel? = false

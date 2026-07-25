@@ -2,7 +2,7 @@
 WebAuthn.configure do |config|
   # The allowed origins - where WebAuthn requests can come from
   config.allowed_origins = if Rails.env.production?
-    [ "https://auth.hackclub.com" ]
+    [ "https://auth.kiwihacks.org" ]
   elsif Rails.env.development?
     [ "http://localhost:3000" ]
   elsif ENV["APP_HOST"].present?
@@ -11,10 +11,10 @@ WebAuthn.configure do |config|
     [ "http://localhost:3000" ]
   end
 
-  config.rp_name = "Hack Club Auth"
+  config.rp_name = "KiwiHacks Auth"
 
   config.rp_id = if Rails.env.production?
-    "auth.hackclub.com"
+    "auth.kiwihacks.org"
   elsif ENV["APP_HOST"].present?
     ENV["APP_HOST"]
   else

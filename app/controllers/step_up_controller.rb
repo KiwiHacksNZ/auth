@@ -148,7 +148,7 @@ class StepUpController < ApplicationController
     when "remove_totp"
       totp = current_identity.totp
       totp&.destroy
-      TwoFactorMailer.authentication_method_disabled(current_identity).deliver_later
+      LoopsTwoFactorMethodDisabledJob.perform_later(current_identity.id)
 
       if current_identity.two_factor_methods.empty?
         current_identity.update!(use_two_factor_authentication: false)
@@ -160,7 +160,7 @@ class StepUpController < ApplicationController
 
     when "disable_2fa"
       current_identity.update!(use_two_factor_authentication: false)
-      TwoFactorMailer.required_authentication_disabled(current_identity).deliver_later
+      LoopsTwoFactorRequiredDisabledJob.perform_later(current_identity.id)
       consume_step_up!
       redirect_to security_path, notice: "2FA requirement disabled"
 
@@ -190,7 +190,7 @@ class StepUpController < ApplicationController
 
   def send_step_up_email_code
     login_code = current_identity.v2_login_codes.create!
-    IdentityMailer.v2_login_code(login_code).deliver_later
+    LoopsLoginCodeJob.perform_later(login_code.id)
   end
 
   def step_up_cancel_path(action_type)

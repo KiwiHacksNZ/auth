@@ -22,7 +22,7 @@ class Components::Brand < Components::Base
 
   def logo
     div(class: "brand-logos") do
-      vite_image_tag "images/hc-square.png", alt: "Hack Club logo", class: "brand-logo"
+      vite_image_tag "images/kh-square.png", alt: "KiwiHacks logo", class: "brand-logo"
       if @logo_path
         span(class: "brand-plus") { "×" }
         vite_image_tag @logo_path, alt: "Logo", class: "brand-logo brand-logo--custom"

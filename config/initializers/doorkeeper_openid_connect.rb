@@ -3,7 +3,7 @@
 Doorkeeper::OpenidConnect.configure do
   issuer do |_resource_owner, _application|
     if Rails.env.production?
-      "https://auth.hackclub.com"
+      "https://auth.kiwihacks.org"
     elsif Rails.env.staging? || Rails.env.uat?
       "https://hca.dinosaurbbq.org"
     else

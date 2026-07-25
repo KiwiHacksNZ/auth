@@ -2,8 +2,8 @@ class ApplicationMailer < ActionMailer::Base
   include Rails.application.routes.url_helpers
   layout "mailer"
 
-  ACCOUNT_FROM = "Hack Club <auth@hackclub.com>".freeze
-  IDENTITY_FROM = "Hack Club <identity@hackclub.com>".freeze
+  ACCOUNT_FROM = "KiwiHacks <niko@kiwihacks.org>".freeze
+  IDENTITY_FROM = "KiwiHacks <niko@kiwihacks.org>".freeze
 
   private
 

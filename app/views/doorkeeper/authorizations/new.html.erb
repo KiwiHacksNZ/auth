@@ -8,7 +8,7 @@
 <%= render "shared/scenario_background_style", scenario: %>
 <div class="auth-container<%= ' has-background' if scenario&.background_path || scenario&.dark_mode_background_path %>">
   <div class="auth-brand">
-    <%= vite_image_tag "images/hc-square.png", alt: "Hack Club logo", class: "brand-logo" %>
+    <%= vite_image_tag "images/kh-square.png", alt: "KiwiHacks logo", class: "brand-logo" %>
     <% if custom_logo_path %>
       <span class="brand-plus">×</span>
       <%= vite_image_tag custom_logo_path, alt: "Logo", class: "brand-logo brand-logo--custom" %>

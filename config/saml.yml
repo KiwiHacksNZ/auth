@@ -8,34 +8,6 @@ development:
       assertion_consumer_services:
         - location: https://samltool.io
           binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-    - slug: slack
-      friendly_name: Hack Club Slack
-      tagline: where most of the magic happens!
-      icon: slack.png
-      entity_id: https://slack.com
-      allowed_attributes:
-        - User.Email
-        - email
-      assertion_consumer_services:
-        - location: https://wackclub.enterprise.slack.com/sso/saml
-          binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-      attribute_consuming_services:
-        - name: Slack User Profile
-          requested_attributes:
-            - name: User.Email
-              friendly_name: Email Address
-              is_required: true
-            - name: User.Username
-              friendly_name: Username
-              is_required: false
-            - name: User.FirstName
-              friendly_name: First Name
-              is_required: false
-            - name: User.LastName
-              friendly_name: Last Name
-              is_required: false
-      allow_idp_initiated: true
-      attribute_format: slack
     - slug: iam_showcase
       allow_idp_initiated: true
       friendly_name: IAM Showcase
@@ -57,31 +29,6 @@ development:
               friendly_name: Surname
               is_required: false
       allow_unsigned_requests: true
-    - slug: airtable
-      allow_idp_initiated: true
-      friendly_name: Airtable
-      tagline: spreadsheets, but make it a database
-      icon: airtable.png
-      entity_id: https://airtable.com/sso/metadata0418.xml
-      allowed_emails:
-        - nora@hackclub.com
-        - max@hackclub.com
-      assertion_consumer_services:
-        - location: https://airtable.com/auth/ssoCallback
-          binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-      attribute_consuming_services:
-        - name: Airtable User Profile
-          requested_attributes:
-            - name: email
-              friendly_name: Email Address
-              is_required: true
-            - name: firstName
-              friendly_name: First Name
-              is_required: false
-            - name: lastName
-              friendly_name: Last Name
-              is_required: false
-      allow_unsigned_requests: true
 
   idp_metadata:
     entity_id: https://identity.hackclub.dev
@@ -91,20 +38,20 @@ development:
 shared:
   idp_metadata:
     organization:
-      name: Hack Club
-      display_name: Hack Club
-      url: https://hackclub.com
+      name: KiwiHacks
+      display_name: KiwiHacks Auth
+      url: https://kiwihacks.org
     contacts:
       - type: technical
-        company: Hack Club
-        given_name: Nora
-        surname: R.
-        email_addresses: [nora@hackclub.com]
+        company: KiwiHacks
+        given_name: KiwiHacks
+        surname: Team
+        email_addresses: [niko@kiwihacks.org]
       - type: support
-        company: Hack Club
-        given_name: Nora
-        surname: R.
-        email_addresses: [nora@hackclub.com]
+        company: KiwiHacks
+        given_name: KiwiHacks
+        surname: Team
+        email_addresses: [niko@kiwihacks.org]
 staging:
   idp_metadata:
     entity_id: https://hca.dinosaurbbq.org
@@ -123,116 +70,9 @@ staging:
 uat:
   idp_metadata:
     entity_id: https://identity-uat.hackclub.dev
-  service_providers:
-    - slug: slack
-      friendly_name: Hack Club Slack
-      tagline: where most of the magic happens!
-      icon: slack.png
-      entity_id: https://slack.com
-      allowed_attributes:
-        - User.Email
-        - email
-      assertion_consumer_services:
-        - location: https://hackclub-sandbox.enterprise.slack.com/sso/saml
-          binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-      attribute_consuming_services:
-        - name: Slack User Profile
-          requested_attributes:
-            - name: User.Email
-              friendly_name: Email Address
-              is_required: true
-            - name: User.Username
-              friendly_name: Username
-              is_required: false
-            - name: User.FirstName
-              friendly_name: First Name
-              is_required: false
-            - name: User.LastName
-              friendly_name: Last Name
-              is_required: false
-      allow_idp_initiated: true
-      attribute_format: slack
-      allow_unsigned_requests: true
 production:
   idp_metadata:
-    entity_id: https://auth.hackclub.com
+    entity_id: https://auth.kiwihacks.org
     single_sign_on_services:
-      - location: https://auth.hackclub.com/saml/auth
+      - location: https://auth.kiwihacks.org/saml/auth
         binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-  service_providers:
-    - slug: slack
-      friendly_name: Hack Club Slack
-      tagline: where most of the magic happens!
-      icon: slack.png
-      entity_id: https://slack.com
-      allowed_attributes:
-        - User.Email
-        - email
-      assertion_consumer_services:
-        - location: https://hackclub.enterprise.slack.com/sso/saml
-          binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-      attribute_consuming_services:
-        - name: Slack User Profile
-          requested_attributes:
-            - name: User.Email
-              friendly_name: Email Address
-              is_required: true
-            - name: User.Username
-              friendly_name: Username
-              is_required: false
-            - name: User.FirstName
-              friendly_name: First Name
-              is_required: false
-            - name: User.LastName
-              friendly_name: Last Name
-              is_required: false
-      allow_idp_initiated: true
-      allow_unsigned_requests: true
-      attribute_format: slack
-    - slug: airtable
-      allow_idp_initiated: true
-      friendly_name: Airtable
-      tagline: spreadsheets, but make it a database
-      icon: airtable.png
-      entity_id: https://airtable.com/sso/metadata0418.xml
-      allowed_emails:
-        - nora@hackclub.com
-        - max@hackclub.com
-      assertion_consumer_services:
-        - location: https://airtable.com/auth/ssoCallback
-          binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-      attribute_consuming_services:
-        - name: Airtable User Profile
-          requested_attributes:
-            - name: email
-              friendly_name: Email Address
-              is_required: true
-            - name: firstName
-              friendly_name: First Name
-              is_required: false
-            - name: lastName
-              friendly_name: Last Name
-              is_required: false
-      allow_unsigned_requests: true
-    - slug: persona
-      allow_idp_initiated: false
-      friendly_name: Persona
-      tagline: who even are you
-      icon: persona.png
-      entity_id: https://withpersona.com/saml/hack-club-1e6f3089-5366-4b94-86ba-c99ae03454f5/metadata
-      allowed_emails:
-        - nora@hackclub.com
-        - leo@hackclub.com
-        - zach@hackclub.com
-      allowed_attributes:
-        - email
-      assertion_consumer_services:
-        - location: https://withpersona.com/saml/hack-club-1e6f3089-5366-4b94-86ba-c99ae03454f5/acs
-          binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
-      attribute_consuming_services:
-        - name: Persona User Profile
-          requested_attributes:
-            - name: email
-              friendly_name: Email Address
-              is_required: true
-      allow_unsigned_requests: true

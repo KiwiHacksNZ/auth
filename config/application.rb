@@ -63,7 +63,11 @@ module IdentityVault
     config.session_store :cookie_store,
                          key: "_identity_vault_session_v2",
                          expire_after: 90.days,
-                         secure: Rails.env.production?,
+                         # secure:false so the session cookie is sent over plain HTTP
+                         # (direct Tailscale/IP access). Re-enable (Rails.env.production?)
+                         # once access is HTTPS-only via auth.kiwihacks.org + the tunnel,
+                         # otherwise the cookie is withheld and login POSTs fail CSRF.
+                         secure: false,
                          httponly: true,
                          same_site: :lax
 

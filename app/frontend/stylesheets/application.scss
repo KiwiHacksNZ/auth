@@ -1,30 +1,38 @@
 // $theme-color: "amber";
 // $theme-color: "lime";
-$theme-color: "red";
+$theme-color: "green";
 @import "@picocss/pico/scss/pico";
 @import "./snippets/tokens";
 
+@font-face {
+    font-family: 'Figtree';
+    src: url("../fonts/Figtree.ttf") format("truetype");
+    font-display: swap;
+}
+
 :root {
-    --pico-font-family-sans-serif: Inter, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue", sans-serif, var(--pico-font-family-emoji) !important;
+    --pico-font-family-sans-serif: Figtree, Inter, system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue", sans-serif, var(--pico-font-family-emoji) !important;
     --pico-font-size: 16px !important;
     --pico-line-height: 1.25 !important;
     --pico-form-element-spacing-vertical: 0.5rem !important;
     --pico-form-element-spacing-horizontal: 1.0rem !important;
     --pico-border-radius: 10px !important;
     --pico-typography-spacing-vertical: 1.25rem !important;
-    
-    // Brand red with skeumorphic depth
-    --pico-primary: #ec3750;
-    --pico-primary-rgb: 236, 55, 80;
-    --pico-primary-hover: #d92d46;
-    --pico-primary-focus: rgba(236, 55, 80, 0.15);
+    --pico-background-color: #eae6e2;
+
+    // KiwiHacks green (from kiwihacks.org's palette), contrast-checked against white text
+    --pico-primary: #5c8f57;
+    --pico-primary-rgb: 92, 143, 87;
+    --pico-primary-hover: #4a7546;
+    --pico-primary-focus: rgba(92, 143, 87, 0.15);
     --pico-primary-inverse: #fff;
-    
+
     @include dark-mode-root {
-        --pico-primary: #f03d58;
-        --pico-primary-rgb: 240, 61, 88;
-        --pico-primary-hover: #ff4d68;
-        --pico-primary-focus: rgba(240, 61, 88, 0.25);
+        --pico-background-color: #132f1e;
+        --pico-primary: #76b070;
+        --pico-primary-rgb: 118, 176, 112;
+        --pico-primary-hover: #88bc82;
+        --pico-primary-focus: rgba(118, 176, 112, 0.25);
         --pico-primary-inverse: #fff;
     }
 }

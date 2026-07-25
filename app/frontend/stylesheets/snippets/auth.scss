@@ -245,3 +245,30 @@
     }
   }
 }
+// --- KiwiHacky touches ---
+
+// Wordmark replaces the plain brand text in the auth header
+.brand-wordmark {
+  display: block;
+  width: auto;
+  max-width: 260px;
+  height: auto;
+  margin: 0 auto 0.75rem;
+}
+
+// Squiggly (hand-drawn) underline on content links
+.auth-card a:not(.primary):not(.secondary):not([role="button"]),
+.welcome-footer a,
+.docs-content a {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #{$brand-sky-bright};
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: none;
+  transition: text-decoration-color 0.15s ease;
+
+  &:hover {
+    text-decoration-color: #{$brand-green};
+  }
+}

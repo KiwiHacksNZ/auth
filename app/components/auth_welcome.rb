@@ -33,7 +33,7 @@ class Components::AuthWelcome < Components::Base
 
   def render_header
     header do
-      h1 { @headline }
+      vite_image_tag "images/kh-wordmark.png", alt: @headline, class: "brand-wordmark"
       small { @subtitle }
     end
   end

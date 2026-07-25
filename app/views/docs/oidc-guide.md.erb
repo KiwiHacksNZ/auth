@@ -28,19 +28,19 @@ This returns all the endpoints and capabilities of our OIDC implementation. Most
 ### 1. Create an OAuth application
 
 Head to the [Developer Apps](<%= developer_apps_path %>) page and create a new app. Make sure to:
-- Set your redirect URI (e.g., `https://arcade.hackclub.com/auth/callback`)
+- Set your redirect URI (e.g., `https://yourapp.example.com/auth/callback`)
 - Note your Client ID and Client Secret
 
 ### 2. Redirect users to authorize
 
-<%= render Components::APIExample.new(method: "GET", url: oauth_authorization_url(client_id: "your_client_id", redirect_uri: "https://arcade.hackclub.com/auth/callback", response_type: "code", scope: "openid profile email")) %>
+<%= render Components::APIExample.new(method: "GET", url: oauth_authorization_url(client_id: "your_client_id", redirect_uri: "https://yourapp.example.com/auth/callback", response_type: "code", scope: "openid profile email")) %>
 
 ### 3. Exchange the code for tokens
 
 After the user authorizes, they'll be redirected back with an authorization code:
 
 ```
-https://arcade.hackclub.com/auth/callback?code=a1b2c3d4e5f6
+https://yourapp.example.com/auth/callback?code=a1b2c3d4e5f6
 ```
 
 Exchange it for tokens:
@@ -53,7 +53,7 @@ Exchange it for tokens:
 {
   "client_id": "your_client_id",
   "client_secret": "your_client_secret",
-  "redirect_uri": "https://arcade.hackclub.com/auth/callback",
+  "redirect_uri": "https://yourapp.example.com/auth/callback",
   "code": "a1b2c3d4e5f6",
   "grant_type": "authorization_code"
 }
@@ -162,7 +162,7 @@ When the `address` scope is granted, the address claim follows the OIDC standard
 
 If you need to force the user to re-authenticate (for sensitive operations), use the `prompt=login` parameter:
 
-<%= render Components::APIExample.new(method: "GET", url: oauth_authorization_url(client_id: "your_client_id", redirect_uri: "https://arcade.hackclub.com/auth/callback", response_type: "code", scope: "openid", prompt: "login")) %>
+<%= render Components::APIExample.new(method: "GET", url: oauth_authorization_url(client_id: "your_client_id", redirect_uri: "https://yourapp.example.com/auth/callback", response_type: "code", scope: "openid", prompt: "login")) %>
 
 This will require the user to verify their identity again, even if they have an active session. They can use TOTP, backup codes, or email verification.
 

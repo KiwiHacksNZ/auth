@@ -4,6 +4,7 @@ class VerificationsController < ApplicationController
   include AhoyAnalytics
 
   before_action :set_identity
+  before_action :ensure_idv_enabled
 
   steps :document
 
@@ -160,6 +161,11 @@ class VerificationsController < ApplicationController
 
   def set_identity
     @identity = current_identity
+  end
+
+  # ID verification is disabled globally for now — block direct access to the flow.
+  def ensure_idv_enabled
+    redirect_to root_path unless current_identity&.identity_verification_enabled?
   end
 
   def on_verification_success

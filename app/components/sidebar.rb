@@ -35,8 +35,8 @@ class Components::Sidebar < Components::Base
 
     items << { label: t("sidebar.edit_info"), path: edit_identity_path, icon: "person" }
 
-    # Add verification link if user needs to submit or resubmit
-    if current_identity.present?
+    # Add verification link if user needs to submit or resubmit (hidden while IDV is disabled)
+    if current_identity.present? && current_identity.identity_verification_enabled?
       status = current_identity.verification_status
       if status == "needs_submission" || status == "pending"
         items << {

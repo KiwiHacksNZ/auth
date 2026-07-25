@@ -128,7 +128,7 @@
   padding: $padding;
   
   @include dark-mode {
-    background: linear-gradient(165deg, #252932 0%, #1f2329 100%);
+    background: linear-gradient(165deg, $brand-forest-card-1 0%, $brand-forest-card-2 100%);
   }
   
   @if $shadow {

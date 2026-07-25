@@ -4,10 +4,10 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #f5f5f5;
+  background: $brand-cream;
 
   @include dark-mode {
-    background: #1a1d23;
+    background: $brand-forest;
   }
 
   &:has(.has-background) {
@@ -79,7 +79,7 @@
 }
 
 .auth-card {
-  background: linear-gradient(165deg, #fafafa 0%, #f5f5f5 100%);
+  background: linear-gradient(165deg, #ffffff 0%, $brand-cream-card 100%);
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: $radius-xl;
   padding: 2.5rem;
@@ -91,7 +91,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 
   @include dark-mode {
-    background: linear-gradient(165deg, #252932 0%, #1f2329 100%);
+    background: linear-gradient(165deg, $brand-forest-card-1 0%, $brand-forest-card-2 100%);
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow:
       4px 4px 16px rgba(0, 0, 0, 0.3),

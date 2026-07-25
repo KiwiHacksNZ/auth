@@ -21,7 +21,7 @@
       0 0 0 3px rgba(var(--pico-primary-rgb), 0.15);
     
     @include dark-mode {
-      background: #252932;
+      background: $brand-forest-card-1;
     }
   }
 

@@ -4,36 +4,36 @@ input[type="button"],
 [role="button"] {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   
-  // Primary button - brand red with skeumorphic depth (default for buttons without variant classes)
+  // Primary button - KiwiHacks green with skeumorphic depth (default for buttons without variant classes)
   &:not(.secondary):not(.outline):not(.danger) {
-    background: linear-gradient(180deg, #ec3750 0%, #d92d46 100%);
-    border: 1px solid #c7243c;
-    box-shadow: 
+    background: linear-gradient(180deg, $brand-green 0%, $brand-green-dark 100%);
+    border: 1px solid $brand-green-darker;
+    box-shadow:
       0 2px 6px rgba(0, 0, 0, 0.15),
       inset 0 1px 0 rgba(255, 255, 255, 0.2),
       inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-    
+
     @include dark-mode {
-      background: linear-gradient(180deg, #f03d58 0%, #dd2f4a 100%);
-      border: 1px solid #c62642;
-      box-shadow: 
+      background: linear-gradient(180deg, $brand-green 0%, $brand-green-dark 100%);
+      border: 1px solid $brand-green-darker;
+      box-shadow:
         0 2px 8px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         inset 0 -1px 1px rgba(0, 0, 0, 0.2);
     }
-    
+
     &:hover:not(:disabled) {
       transform: translateY(-1px);
-      background: linear-gradient(180deg, #f04560 0%, #e03348 100%);
-      border-color: #c7243c;
+      background: linear-gradient(180deg, $brand-green-light 0%, $brand-green 100%);
+      border-color: $brand-green-dark;
       box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.25),
         inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-      
+
       @include dark-mode {
-        background: linear-gradient(180deg, #ff4d68 0%, #f03d58 100%);
-        border-color: #dd2f4a;
+        background: linear-gradient(180deg, $brand-green-lighter 0%, $brand-green-light 100%);
+        border-color: $brand-green;
         box-shadow:
           0 4px 16px rgba(0, 0, 0, 0.4),
           inset 0 1px 0 rgba(255, 255, 255, 0.25),

@@ -39,7 +39,7 @@ shared:
   idp_metadata:
     organization:
       name: KiwiHacks
-      display_name: KiwiHacks Auth
+      display_name: KiwiHacks Account
       url: https://kiwihacks.org
     contacts:
       - type: technical

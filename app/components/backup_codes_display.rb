@@ -130,7 +130,7 @@ class Components::BackupCodesDisplay < Components::Base
 
       div(class: "print-only-banner") do
         if @identity
-          b { "KiwiHacks Auth recovery codes for " }
+          b { "KiwiHacks Account recovery codes for " }
           plain @identity&.primary_email
           br
           i { "Generated on #{Time.current.strftime('%B %d, %Y at %I:%M %p %Z')}" }

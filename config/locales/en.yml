@@ -118,7 +118,7 @@ en:
     attributes:
       backend_user:
         slack_id: Slack ID
-  brand: KiwiHacks Auth
+  brand: KiwiHacks Account
   home:
     apps:
       heading: Where do you want to go today?
@@ -403,7 +403,7 @@ en:
       super_secret_settings: "Super secret settings"
       saml_debug: "debug your SAML assertions?"
     new:
-      already_have: Already have a KiwiHacks Auth account?
+      already_have: Already have a KiwiHacks Account account?
       log_in: Log in here
       not_necessarily_legal_name: not necessarily your legal name, what do people usually call you?
       email_code: We'll send a one-time code to this address.
@@ -425,7 +425,7 @@ en:
   logins:
     new:
       title: Welcome back!
-      subtitle: Sign in to KiwiHacks Auth
+      subtitle: Sign in to KiwiHacks Account
       email_label: Email address
       continue: Continue
       no_account: Don't have an account?
@@ -472,7 +472,7 @@ en:
       text: Logging you in...
   static_pages:
     welcome:
-      title: KiwiHacks Auth
+      title: KiwiHacks Account
       subtitle: One account for KiwiHacks and beyond.
       cta_create: Create Your Account →
       cta_signin: Sign In
@@ -803,7 +803,7 @@ en:
       success: Email change request cancelled.
       already_completed: This request has already been completed or cancelled.
   auth:
-    sign_in_or_create: "Sign in or create a KiwiHacks Auth account to continue"
+    sign_in_or_create: "Sign in or create a KiwiHacks Account account to continue"
   portal:
     verifications:
       pending:

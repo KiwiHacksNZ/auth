@@ -11,7 +11,7 @@ WebAuthn.configure do |config|
     [ "http://localhost:3000" ]
   end
 
-  config.rp_name = "KiwiHacks Auth"
+  config.rp_name = "KiwiHacks Account"
 
   config.rp_id = if Rails.env.production?
     "auth.kiwihacks.org"

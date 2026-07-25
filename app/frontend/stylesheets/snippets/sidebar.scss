@@ -7,7 +7,7 @@
 
 .sidebar {
   width: 280px;
-  background: linear-gradient(165deg, var(--pico-background-color) 0%, var(--surface-2) 100%);
+  background: $brand-nav-light;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -19,7 +19,7 @@
   2px 0 4px rgba(0, 0, 0, 0.02);
 
   @include dark-mode {
-    background: linear-gradient(165deg, #1c1c1c 0%, #161616 100%);
+    background: $brand-nav-dark;
     box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3),
     2px 0 4px rgba(0, 0, 0, 0.2);
   }

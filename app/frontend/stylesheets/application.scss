@@ -18,21 +18,25 @@ $theme-color: "green";
     --pico-form-element-spacing-horizontal: 1.0rem !important;
     --pico-border-radius: 10px !important;
     --pico-typography-spacing-vertical: 1.25rem !important;
-    --pico-background-color: #eae6e2;
 
-    // KiwiHacks green (from kiwihacks.org's palette), contrast-checked against white text
-    --pico-primary: #5c8f57;
-    --pico-primary-rgb: 92, 143, 87;
-    --pico-primary-hover: #4a7546;
-    --pico-primary-focus: rgba(92, 143, 87, 0.15);
+    // Background + primary text (light)
+    --pico-background-color: #{$brand-cream};
+    --pico-color: #{$brand-text-light};
+
+    // Accent/buttons — #298951, same in light + dark
+    --pico-primary: #{$brand-green};
+    --pico-primary-rgb: 41, 137, 81;
+    --pico-primary-hover: #{$brand-green-dark};
+    --pico-primary-focus: rgba(41, 137, 81, 0.15);
     --pico-primary-inverse: #fff;
 
     @include dark-mode-root {
-        --pico-background-color: #132f1e;
-        --pico-primary: #76b070;
-        --pico-primary-rgb: 118, 176, 112;
-        --pico-primary-hover: #88bc82;
-        --pico-primary-focus: rgba(118, 176, 112, 0.25);
+        --pico-background-color: #{$brand-forest};
+        --pico-color: #{$brand-text-dark};
+        --pico-primary: #{$brand-green};
+        --pico-primary-rgb: 41, 137, 81;
+        --pico-primary-hover: #{$brand-green-light};
+        --pico-primary-focus: rgba(41, 137, 81, 0.25);
         --pico-primary-inverse: #fff;
     }
 }
@@ -42,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   
   @include dark-mode {
-    color: #f0f0f0;
+    color: #{$brand-text-dark};
   }
 }
 

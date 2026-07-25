@@ -27,17 +27,28 @@
   }
 }
 
-// KiwiHacks brand palette (from kiwihacks.org)
-$brand-green: #5c8f57;
-$brand-green-dark: #4a7546;
-$brand-green-darker: #3c5f39;
-$brand-green-light: #76b070;
-$brand-green-lighter: #88bc82;
-$brand-cream: #eae6e2;
-$brand-cream-card: #f5f2ee;
-$brand-forest: #132f1e;
-$brand-forest-card-1: #1d3a28;
-$brand-forest-card-2: #16301f;
+// KiwiHacks brand palette
+// Accent/buttons (same in light + dark)
+$brand-green: #298951;
+$brand-green-dark: #227a47;
+$brand-green-darker: #1b6339;
+$brand-green-light: #2fa05f;
+$brand-green-lighter: #34b06a;
+// Background (page)
+$brand-cream: #EBE6E3;         // light
+$brand-cream-card: #F3EEEA;    // light card
+$brand-forest: #1A1714;        // dark
+$brand-forest-card-1: #241E1A; // dark card
+$brand-forest-card-2: #1E1815;
+// Surface / info bar
+$brand-info-light: #76B170;
+$brand-info-dark: #1E2E1C;
+// Nav bar
+$brand-nav-light: #65D7FF;
+$brand-nav-dark: #0D2A35;
+// Primary text
+$brand-text-light: #2C2420;
+$brand-text-dark: #EBE6E3;
 
 $radius-sm: 6px;
 $radius-md: 8px;

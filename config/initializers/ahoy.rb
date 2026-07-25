@@ -7,7 +7,7 @@ Ahoy.api = false # Server-side only, no JavaScript tracking
 Ahoy.cookies = true # Cookie-based visitor tracking
 Ahoy.cookie_options = {
   same_site: :lax,
-  secure: Rails.env.production? || Rails.env.staging?
+  secure: false
 }
 
 # Privacy settings

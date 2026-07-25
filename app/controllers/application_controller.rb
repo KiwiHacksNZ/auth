@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
     if cookies["_identity_vault_session"]
       cookies.delete("_identity_vault_session",
                      path: "/",
-                     secure: Rails.env.production?,
+                     secure: false,
                      httponly: true)
     end
   end

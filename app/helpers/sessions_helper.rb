@@ -24,14 +24,14 @@ module SessionsHelper
       value: session_token,
       expires: expires_at,
       httponly: true,
-      secure: Rails.env.production?,
+      secure: false,
       same_site: :lax
     }
     cookies.encrypted[:signed_user] = {
       value: identity.signed_id(expires_in: 2.months, purpose: :remember_me),
       expires: 2.months.from_now,
       httponly: true,
-      secure: Rails.env.production?,
+      secure: false,
       same_site: :lax
     }
     ident_session = identity.sessions.build(

@@ -43,7 +43,7 @@ class LoginsController < ApplicationController
             value: attempt.browser_token,
             expires: LoginAttempt::EXPIRATION.from_now,
             httponly: true,
-            secure: Rails.env.production?,
+            secure: false,
             same_site: :lax
         }
 

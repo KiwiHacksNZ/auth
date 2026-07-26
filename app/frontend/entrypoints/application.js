@@ -1,7 +1,6 @@
 import "../js/alpine.js";
 import "../js/click-to-copy";
 import "../js/otp-input.js";
-import "../js/persona-verify.js";
 
 import htmx from "htmx.org"
 window.htmx = htmx

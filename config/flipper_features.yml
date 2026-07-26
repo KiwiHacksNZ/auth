@@ -1,6 +1,4 @@
 shared:
-  persona_verification_2026_04_09: routes new users through Persona identity verification instead of document upload
-  persona_verification_in_india_2026_06_05: gates Persona verification for users in India, pending Aadhaar support
   are_we_enterprise_yet_2025_10_21: enables Slack Enterprise Grid features (SAML, SCIM provisioning)
   email_change_2025_10_09: allows users to change their primary email address
   allow_adult_registration_2026_05_28: allows users 19+ to register without an adult-accepting program
@@ -14,4 +12,4 @@ shared:
   disable_slack_invites_2025_12_08: suppresses Slack SCIM provisioning for an actor
   dev_force_manual_review_2026_05_27: forces verifications for an actor into manual review
   dev_force_deny_verification_2026_05_27: auto-denies verifications for an actor
-  identity_verification_required_2026_07_25: requires identity verification (document/Persona) during onboarding. Off by default for KiwiHacks.
+  identity_verification_required_2026_07_25: requires identity verification during onboarding. Off by default for KiwiHacks.

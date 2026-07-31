@@ -39,16 +39,6 @@ RSpec.describe Components::Sidebar do
         it { is_expected.to be true }
       end
 
-      context "when on persona flow" do
-        let(:current_path) { "/verifications/persona" }
-        it { is_expected.to be true }
-      end
-
-      context "when on student ID flow" do
-        let(:current_path) { "/verifications/student-id" }
-        it { is_expected.to be true }
-      end
-
       context "when on verification status" do
         let(:current_path) { "/verifications/status" }
         it { is_expected.to be true }

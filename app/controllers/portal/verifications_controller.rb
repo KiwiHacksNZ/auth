@@ -16,22 +16,7 @@ class Portal::VerificationsController < Portal::BaseController
     when "ineligible"
       redirect_to_portal_return(status: :ineligible)
     when "needs_submission"
-      if @identity.persona_verification_locked?
-        redirect_to_portal_return(status: :locked)
-        return
-      end
-
-      case @identity.required_verification_method
-      when :persona
-        if @identity.persona_student_id_eligible?
-          @persona_path = portal_verify_persona_path
-          @student_id_path = portal_verify_student_id_path
-          render "verifications/choose"
-        else
-          redirect_to portal_verify_persona_path
-        end
-      when :document then redirect_to portal_verify_document_path
-      end
+      redirect_to portal_verify_document_path
     end
   end
 
@@ -51,82 +36,8 @@ class Portal::VerificationsController < Portal::BaseController
       return
     end
 
-    if @identity.required_verification_method == :persona && !Internal::Eligibility.manual_flow?(@identity)
-      flash[:info] = "We use automated verification now — it's faster!"
-      redirect_to portal_verify_persona_path and return
-    end
-
     setup_document_step
     render :document
-  end
-
-  def persona
-    @identity = current_identity
-    status = @identity.verification_status
-
-    case status
-    when "verified"
-      redirect_to_portal_return(status: :verified)
-      return
-    when "pending"
-      redirect_to_portal_return(status: :pending)
-      return
-    end
-
-    if @identity.persona_verification_locked?
-      redirect_to_portal_return(status: :locked)
-      return
-    end
-
-    unless @identity.required_verification_method == :persona
-      redirect_to portal_verify_document_path
-      return
-    end
-
-    setup_persona_step
-    if @inquiry_already_completed
-      redirect_to_portal_return(status: :pending)
-    end
-  end
-
-  def student_id
-    @identity = current_identity
-    status = @identity.verification_status
-
-    case status
-    when "verified"
-      redirect_to_portal_return(status: :verified)
-      return
-    when "pending"
-      redirect_to_portal_return(status: :pending)
-      return
-    end
-
-    if @identity.persona_verification_locked?
-      redirect_to_portal_return(status: :locked)
-      return
-    end
-
-    unless @identity.persona_student_id_eligible?
-      redirect_to portal_verify_path
-      return
-    end
-
-    setup_student_id_step
-    if @inquiry_already_completed
-      redirect_to_portal_return(status: :pending)
-      return
-    end
-    render "verifications/persona"
-  end
-
-  def update_legal_name
-    draft = current_identity.persona_verifications.where(status: :draft).first
-    redirect_path = draft.is_a?(Verification::PersonaStudentIdVerification) ? portal_verify_student_id_path : portal_verify_persona_path
-    handle_legal_name_update(
-      redirect_path: redirect_path,
-      find_verification: -> { draft }
-    )
   end
 
   def cancel
@@ -140,10 +51,6 @@ class Portal::VerificationsController < Portal::BaseController
     if %w[pending verified ineligible].include?(status)
       redirect_to_portal_return(status: status.to_sym)
       return
-    end
-
-    if @identity.required_verification_method == :persona && !Internal::Eligibility.manual_flow?(@identity)
-      redirect_to portal_verify_persona_path and return
     end
 
     handle_document_submission

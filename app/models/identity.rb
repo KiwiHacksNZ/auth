@@ -44,9 +44,6 @@ class Identity < ApplicationRecord
 
   include CountryEnumable
 
-  include HasPersonaUrl
-  has_persona_url "accounts", :persona_account_id
-
   include PublicIdentifiable
   set_public_id_prefix "ident"
 
@@ -66,13 +63,10 @@ class Identity < ApplicationRecord
   def active_for_backend? = backend_user&.active?
 
   has_many :documents, class_name: "Identity::Document", dependent: :destroy
-  has_many :persona_records, class_name: "Identity::PersonaRecord", dependent: :destroy
   has_many :verifications, class_name: "Verification", dependent: :destroy
   has_many :document_verifications, class_name: "Verification::DocumentVerification", dependent: :destroy
   has_many :aadhaar_verifications, class_name: "Verification::AadhaarVerification", dependent: :destroy
   has_many :vouch_verifications, class_name: "Verification::VouchVerification", dependent: :destroy
-  has_many :persona_verifications, class_name: "Verification::PersonaVerification", dependent: :destroy
-  has_many :persona_student_id_verifications, class_name: "Verification::PersonaStudentIdVerification", dependent: :destroy
   has_many :addresses, class_name: "Address", dependent: :destroy
   belongs_to :primary_address, class_name: "Address", optional: true
 
@@ -98,7 +92,6 @@ class Identity < ApplicationRecord
   validate :validate_email_not_tombstoned, if: -> { new_record? || primary_email_changed? }
 
   validates :slack_id, uniqueness: { conditions: -> { where(deleted_at: nil) } }, allow_blank: true
-  validates :persona_account_id, uniqueness: true, allow_blank: true
   validates :aadhaar_number, uniqueness: true, allow_blank: true
   validates :aadhaar_number, format: { with: /\A\d{12}\z/, message: "must be 12 digits" }, if: -> { aadhaar_number.present? }
 
@@ -205,24 +198,11 @@ class Identity < ApplicationRecord
 
   def identity_verification_enabled? = Flipper.enabled?(:identity_verification_required_2026_07_25, self)
 
-  def required_verification_method
-    if Flipper.enabled?(:persona_verification_2026_04_09, self)
-      if country == "IN"
-        return :document unless Flipper.enabled?(:persona_verification_in_india_2026_06_05, self)
-      elsif country == "CN"
-        return :document unless Flipper.enabled?(:persona_verification_in_china_2026_06_08, self)
-      end
-      :persona
-    else
-      :document
-    end
-  end
-
   def onboarding_step
     return :basic_info unless persisted?
 
     if identity_verification_enabled? && !verifications.where(status: %w[approved pending]).any?
-      return required_verification_method
+      return :document
     end
 
     return :address unless primary_address_id.present?
@@ -232,19 +212,7 @@ class Identity < ApplicationRecord
 
   def onboarding_complete? = onboarding_step == :submitted
 
-  def needs_documents? = required_verification_method == :document && onboarding_step == :document
-
-  def needs_persona?
-    return false unless identity_verification_enabled?
-    return false if permabanned
-    return false unless required_verification_method == :persona
-    !verifications.not_ignored.where(status: %w[approved pending]).any?
-  end
-
-  def persona_student_id_eligible?
-    Verification::PersonaStudentIdVerification::STUDENT_ID_COUNTRIES.include?(country) &&
-      required_verification_method == :persona
-  end
+  def needs_documents? = onboarding_step == :document
 
   def latest_verification = verifications.not_ignored.order(created_at: :desc).first
 
@@ -298,29 +266,12 @@ class Identity < ApplicationRecord
 
   def rejected_verifications_for_context = verifications.not_ignored.retryable_rejections
 
-  # -- persona attempt cap ------------------------------------------------
-  # each persona inquiry costs real money. cap retries so a single user
-  # can't burn through the budget on expired sessions and bad photos.
-  # admin "unlock" = bulk-ignore the old rejections (resets the count).
-  MAX_PERSONA_ATTEMPTS = 3
-
-  def persona_verification_locked?
-    return false unless required_verification_method == :persona
-    consumed_persona_attempts >= MAX_PERSONA_ATTEMPTS
-  end
-
-  def consumed_persona_attempts
-    verifications.not_ignored.rejected
-      .where(type: %w[Verification::PersonaVerification Verification::PersonaStudentIdVerification])
-      .count
-  end
-
   # TODO: this is schnasty
   def onboarding_redirect_path
     helpers = Rails.application.routes.url_helpers
 
     return helpers.basic_info_onboarding_path unless persisted?
-    return helpers.new_verifications_path if needs_persona? || needs_documents?
+    return helpers.new_verifications_path if needs_documents?
     return helpers.address_onboarding_path unless primary_address_id.present?
 
     helpers.submitted_onboarding_path

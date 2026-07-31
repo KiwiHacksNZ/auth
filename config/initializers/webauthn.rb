@@ -1,29 +1,13 @@
 # Configure WebAuthn for passkey authentication
 WebAuthn.configure do |config|
-  # The allowed origins - where WebAuthn requests can come from
-  config.allowed_origins = if Rails.env.production?
-    [ "https://auth.kiwihacks.org" ]
-  elsif Rails.env.development?
-    [ "http://localhost:3000" ]
-  elsif ENV["APP_HOST"].present?
-    [ "https://#{ENV["APP_HOST"]}" ]
-  else
-    [ "http://localhost:3000" ]
-  end
+  # rp_id must equal, or be a registrable suffix of, the host actually serving the
+  # page — browsers reject registration otherwise — so it tracks APP_HOST rather
+  # than a hardcoded domain.
+  host = ENV["APP_HOST"].presence || (Rails.env.production? ? "account.kiwihacks.com" : "localhost:3000")
+  scheme = host.start_with?("localhost") ? "http" : "https"
 
+  config.allowed_origins = [ "#{scheme}://#{host}" ]
   config.rp_name = "KiwiHacks Account"
-
-  config.rp_id = if Rails.env.production?
-    "auth.kiwihacks.org"
-  elsif ENV["APP_HOST"].present?
-    ENV["APP_HOST"]
-  else
-    "localhost"
-  end
-
-  # Credential options (optional - these are the defaults)
-  # Algorithms we support for credential public keys
-  # ES256 is ECDSA with SHA-256, the most widely supported algorithm
-  # RS256 is RSA with SHA-256, supported by some older authenticators
+  config.rp_id = host.split(":").first
   config.algorithms = [ "ES256", "RS256" ]
 end

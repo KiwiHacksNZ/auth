@@ -10,8 +10,4 @@ class VerificationPolicy < ApplicationPolicy
   def reject? = user_is_manual_document_verifier?
 
   def ignore? = user&.super_admin?
-
-  def nuke_inquiry? = user&.super_admin?
-
-  def relink? = user&.super_admin?
 end

@@ -1,11 +1,19 @@
+# Deployed via Portainer (Repository method). All secrets live on the host under
+# /opt/kiwihacks-auth and are bind-mounted in: env_file cannot be used here because
+# Portainer's compose runs inside the Portainer container and resolves env_file
+# against its own filesystem, while volume mounts are resolved by the daemon on
+# the host.
 services:
   db:
     image: postgres:16
     restart: unless-stopped
-    env_file:
-      - /opt/kiwihacks-auth/db.env
+    environment:
+      POSTGRES_USER: kiwihacks
+      POSTGRES_DB: kiwihacks_auth_production
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_password
     volumes:
       - pg-data:/var/lib/postgresql/data
+      - /opt/kiwihacks-auth/pg_password:/run/secrets/pg_password:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U kiwihacks -d kiwihacks_auth_production"]
       interval: 30s
@@ -17,17 +25,17 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    env_file:
-      - /opt/kiwihacks-auth/stack.env
     volumes:
+      - /opt/kiwihacks-auth/stack.env:/run/secrets/stack.env:ro
       - /opt/kiwihacks-auth/saml:/rails/saml:ro
       - /opt/kiwihacks-auth/oidc_signing_key.pem:/run/secrets/oidc_key:ro
-    # OIDC_SIGNING_KEY is a multi-line PEM; env_file is single-line only and would
-    # truncate it to the BEGIN header, so load it from the mounted file at start.
+    # stack.env is exported line-by-line rather than sourced so values never pass
+    # through shell word-splitting; OIDC_SIGNING_KEY is a multi-line PEM that no
+    # env-file format can carry, so it is read from its own mounted file.
     entrypoint:
       - /bin/bash
       - -c
-      - 'export OIDC_SIGNING_KEY="$$(cat /run/secrets/oidc_key)"; exec /rails/bin/docker-entrypoint "$$@"'
+      - 'while IFS= read -r l; do [ -n "$$l" ] && export "$$l"; done < /run/secrets/stack.env; export OIDC_SIGNING_KEY="$$(cat /run/secrets/oidc_key)"; exec /rails/bin/docker-entrypoint "$$@"'
       - --
     command: ["./bin/thrust", "./bin/rails", "server"]
     depends_on:
@@ -41,15 +49,14 @@ services:
       context: .
       dockerfile: Dockerfile.worker
     restart: unless-stopped
-    env_file:
-      - /opt/kiwihacks-auth/stack.env
     volumes:
+      - /opt/kiwihacks-auth/stack.env:/run/secrets/stack.env:ro
       - /opt/kiwihacks-auth/saml:/rails/saml:ro
       - /opt/kiwihacks-auth/oidc_signing_key.pem:/run/secrets/oidc_key:ro
     entrypoint:
       - /bin/bash
       - -c
-      - 'export OIDC_SIGNING_KEY="$$(cat /run/secrets/oidc_key)"; exec "$$@"'
+      - 'while IFS= read -r l; do [ -n "$$l" ] && export "$$l"; done < /run/secrets/stack.env; export OIDC_SIGNING_KEY="$$(cat /run/secrets/oidc_key)"; exec "$$@"'
       - --
     command: ["bundle", "exec", "good_job", "start", "--max-threads=14"]
     depends_on:

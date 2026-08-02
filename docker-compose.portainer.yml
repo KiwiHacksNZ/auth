@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    env_file:
+      - /opt/kiwihacks-auth/db.env
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kiwihacks -d kiwihacks_auth_production"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - /opt/kiwihacks-auth/stack.env
+    volumes:
+      - /opt/kiwihacks-auth/saml:/rails/saml:ro
+      - /opt/kiwihacks-auth/oidc_signing_key.pem:/run/secrets/oidc_key:ro
+    # OIDC_SIGNING_KEY is a multi-line PEM; env_file is single-line only and would
+    # truncate it to the BEGIN header, so load it from the mounted file at start.
+    entrypoint:
+      - /bin/bash
+      - -c
+      - 'export OIDC_SIGNING_KEY="$$(cat /run/secrets/oidc_key)"; exec /rails/bin/docker-entrypoint "$$@"'
+      - --
+    command: ["./bin/thrust", "./bin/rails", "server"]
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:80"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    restart: unless-stopped
+    env_file:
+      - /opt/kiwihacks-auth/stack.env
+    volumes:
+      - /opt/kiwihacks-auth/saml:/rails/saml:ro
+      - /opt/kiwihacks-auth/oidc_signing_key.pem:/run/secrets/oidc_key:ro
+    entrypoint:
+      - /bin/bash
+      - -c
+      - 'export OIDC_SIGNING_KEY="$$(cat /run/secrets/oidc_key)"; exec "$$@"'
+      - --
+    command: ["bundle", "exec", "good_job", "start", "--max-threads=14"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pg-data:

@@ -13,7 +13,7 @@ class ProgramPolicy < ApplicationPolicy
   end
 
   def create?
-    user.developer_mode? || admin?
+    admin?
   end
 
   def new? = create?

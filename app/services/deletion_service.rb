@@ -73,6 +73,14 @@ module DeletionService
         record.update_columns(name: "[REDACTED]", date_of_birth: nil, raw_json_response: nil)
         aadhaar_count += 1
       end
+      Verification.with_deleted.where(identity_id: identity.id)
+        .update_all(
+          internal_rejection_comment: nil,
+          rejection_reason_details: nil,
+          aadhaar_hc_transaction_id: nil,
+          aadhaar_external_transaction_id: nil,
+          aadhaar_link: nil
+        )
       log.call "  scrubbed #{addr_count} #{"address".pluralize(addr_count)}, #{aadhaar_count} aadhaar"
 
       log.call "step 5: destroying resemblances..."

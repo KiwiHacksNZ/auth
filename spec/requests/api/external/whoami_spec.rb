@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "API::External::Identities#whoami", type: :request do
-  let(:origin) { "https://program.hackclub.com" }
-  let(:identity) { create(:identity, first_name: "Heidi", primary_email: "heidi@hackclub.com") }
+  let(:origin) { "https://program.kiwihacks.org" }
+  let(:identity) { create(:identity, first_name: "Heidi", primary_email: "heidi@kiwihacks.org") }
 
   # Stub the session cookie lookup (SessionsHelper) to isolate whoami behaviour.
   def signed_in_as(ident)
@@ -24,7 +24,7 @@ RSpec.describe "API::External::Identities#whoami", type: :request do
       json = JSON.parse(response.body)
       expect(json).to eq(
         "signed_in" => true,
-        "email" => "heidi@hackclub.com",
+        "email" => "heidi@kiwihacks.org",
         "first_name" => "Heidi"
       )
       expect(response.headers["Access-Control-Allow-Origin"]).to eq(origin)

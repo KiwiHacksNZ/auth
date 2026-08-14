@@ -1,10 +1,10 @@
-chan_welcome_to_hc = Rails.configuration.slack_channels.welcome_to_hack_club
+chan_welcome_to_kiwihacks = Rails.configuration.slack_channels.welcome_to_kiwihacks
 chan_hq_eng = Rails.configuration.slack_channels.hq_eng
 chan_announcements = Rails.configuration.slack_channels.announcements
 chan_library = Rails.configuration.slack_channels.library
 chan_neighbourhood = Rails.configuration.slack_channels.neighbourhood
 chan_ship = Rails.configuration.slack_channels.ship
-chan_welcome = Rails.configuration.slack_channels.welcome_to_hack_club
+chan_welcome = Rails.configuration.slack_channels.welcome_to_kiwihacks
 
 scenario = @identity.onboarding_scenario_instance
 is_full_member = scenario&.slack_user_type == :full_member
@@ -12,14 +12,12 @@ is_full_member = scenario&.slack_user_type == :full_member
 case @identity.promote_click_count
 when 0
   if is_full_member
-    image "https://cdn.hackclub.com/019c297b-5d42-7256-a5e5-7d8f9f7adcd5/welcome.gif", "Welcome to KiwiHacks!"
-
     header "🎉 welcome to KiwiHacks!"
 
     section <<~TEXT, markdown: true
       You're in! All channels are open to you.
 
-      We take our <https://hackclub.com/conduct|Code of Conduct> seriously — it's enforced by the Fire Department. DM <@U07K4TS9HQE> if you ever have a concern.
+      We take our <https://kiwihacks.org/conduct|Code of Conduct> seriously — it's enforced by our moderation team. DM a moderator if you ever have a concern.
 
       :beltparrot::beltparrot::beltparrot::beltparrot::beltparrot::beltparrot::beltparrot::beltparrot::beltparrot::beltparrot:
       Here are some places to start:
@@ -44,11 +42,11 @@ when 0
     header "🎉 welcome in!"
 
     section <<~TEXT, markdown: true
-      Great! The Code of Conduct is enforced by the Fire Department. DM <@U07K4TS9HQE> if you ever have a concern.
+      Great! The Code of Conduct is enforced by our moderation team. DM a moderator if you ever have a concern.
 
       You now have access to all channels! Reload Slack to see them.
 
-      Visit <##{chan_welcome_to_hc}> for questions, advice, or just to introduce yourself!
+      Visit <##{chan_welcome_to_kiwihacks}> for questions, advice, or just to introduce yourself!
     TEXT
   end
 

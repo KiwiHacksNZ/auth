@@ -35,9 +35,9 @@ class EmailChangeMailerPreview < ActionMailer::Preview
   def build_fake_identity
     Identity.new(
       id: 1,
-      first_name: "Orpheus",
+      first_name: "Kea",
       last_name: "Mascot",
-      primary_email: "orpheus@hackclub.com"
+      primary_email: "kea@kiwihacks.org"
     )
   end
 end

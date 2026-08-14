@@ -1,7 +1,4 @@
-Contact: https://security.hackclub.com
-Contact: mailto:nora@hackclub.com
-Expires: 2026-11-27T05:00:00.000Z
-Acknowledgments: https://bugs.hackclub.com/hall-of-fame.php
+Contact: mailto:niko@kiwihacks.org
+Expires: 2027-01-01T00:00:00.000Z
 Preferred-Languages: en
-Canonical: https://identity.hackclub.com/.well-known/security.txt
-Policy: https://security.hackclub.com/
+Canonical: https://auth.kiwihacks.org/.well-known/security.txt

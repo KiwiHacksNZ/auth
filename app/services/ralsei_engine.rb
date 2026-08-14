@@ -1,6 +1,6 @@
 module RalseiEngine
   class << self
-    RALSEI_PFP = "https://cdn.hackclub.com/019c2993-4a83-73d4-9e3a-96cf29881572/flaming_skull.jpg"
+    BOT_PFP = ENV["SLACK_BOT_ICON_URL"].presence
 
     def send_first_message(identity)
       scenario = identity.onboarding_scenario_instance
@@ -105,7 +105,7 @@ module RalseiEngine
       client.chat_postMessage(
         channel: channel_id,
         username: bot_name || scenario&.bot_name || "The Flaming Skull of Welcome",
-        icon_url: bot_icon_url || scenario&.bot_icon_url || RALSEI_PFP,
+        icon_url: bot_icon_url || scenario&.bot_icon_url || BOT_PFP,
         **JSON.parse(payload, symbolize_names: true),
         unfurl_links: false,
       )
@@ -135,7 +135,7 @@ module RalseiEngine
         channel: channel_id,
         user: identity.slack_id,
         username: scenario&.bot_name || "The Flaming Skull of Welcome",
-        icon_url: scenario&.bot_icon_url || RALSEI_PFP,
+        icon_url: scenario&.bot_icon_url || BOT_PFP,
         **JSON.parse(payload, symbolize_names: true),
         unfurl_links: false,
       )

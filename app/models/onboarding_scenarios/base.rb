@@ -105,7 +105,7 @@ module OnboardingScenarios
     def bot_icon_url = nil
 
     # Branding - override to customize logo/background for welcome, OAuth, and portal pages
-    # logo_path: vite asset path like "images/flavortown.png"
+    # logo_path: vite asset path like "images/fallout/fallout.png"
     def logo_path = nil
     def background_path = nil
 

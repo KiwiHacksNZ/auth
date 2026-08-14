@@ -13,8 +13,8 @@ class IdentityMailerPreview < ActionMailer::Preview
 
   def build_fake_identity
     Identity.new(
-      first_name: "Orpheus",
-      primary_email: "orpheus@hackclub.com"
+      first_name: "Kea",
+      primary_email: "kea@kiwihacks.org"
     )
   end
 

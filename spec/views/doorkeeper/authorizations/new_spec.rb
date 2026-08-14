@@ -90,8 +90,8 @@ RSpec.describe "doorkeeper/authorizations/new", type: :view do
       allow(program).to receive(:hq_official?).and_return(true)
       allow(program).to receive(:byline).and_return(nil)
       render
-      expect(rendered).to include("official Hack Club program")
-      expect(rendered).to include("Hack Club HQ")
+      expect(rendered).to include("official KiwiHacks program")
+      expect(rendered).to include("KiwiHacks HQ")
     end
 
     it "shows custom byline when set" do
@@ -105,7 +105,7 @@ RSpec.describe "doorkeeper/authorizations/new", type: :view do
       allow(program).to receive(:hq_official?).and_return(false)
       allow(program).to receive(:trust_level).and_return("community_untrusted")
       render
-      expect(rendered).not_to include("official Hack Club program")
+      expect(rendered).not_to include("official KiwiHacks program")
     end
   end
 

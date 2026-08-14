@@ -1,10 +1,10 @@
-chan_welcome_to_hc = Rails.configuration.slack_channels.welcome_to_hack_club
+chan_welcome_to_kiwihacks = Rails.configuration.slack_channels.welcome_to_kiwihacks
 chan_hq_eng = Rails.configuration.slack_channels.hq_eng
 chan_announcements = Rails.configuration.slack_channels.announcements
 chan_library = Rails.configuration.slack_channels.library
 chan_neighbourhood = Rails.configuration.slack_channels.neighbourhood
 chan_ship = Rails.configuration.slack_channels.ship
-chan_welcome = Rails.configuration.slack_channels.welcome_to_hack_club
+chan_welcome = Rails.configuration.slack_channels.welcome_to_kiwihacks
 chan_fallout = Rails.configuration.slack_channels.fallout
 chan_fallout_bulletin = Rails.configuration.slack_channels.fallout_bulletin
 chan_fallout_help = Rails.configuration.slack_channels.fallout_help
@@ -14,11 +14,11 @@ when 0
   header "🎉 welcome in!"
 
   section <<~TEXT, markdown: true
-    Great! The Code of Conduct is enforced by the Fire Department. DM <@U07K4TS9HQE> if you ever have a concern.
+    Great! The Code of Conduct is enforced by our moderation team. DM a moderator if you ever have a concern.
 
     You now have access to all channels! Reload Slack to see them.
 
-    Visit <##{chan_welcome_to_hc}> for questions, advice, or just to introduce yourself!
+    Visit <##{chan_welcome_to_kiwihacks}> for questions, advice, or just to introduce yourself!
 
     For Fallout related things:
 

@@ -31,8 +31,8 @@ class VerificationMailerPreview < ActionMailer::Preview
     end
 
     identity = Identity.last || Identity.new(
-      first_name: "Orpheus",
-      primary_email: "orpheus@hackclub.com"
+      first_name: "Kiki",
+      primary_email: "kiki@kiwihacks.org"
     )
 
     verification = Verification::DocumentVerification.new(identity: identity)

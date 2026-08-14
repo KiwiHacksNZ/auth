@@ -24,7 +24,7 @@ class Components::Footer < Components::Base
                   span(class: "version-text") { "v#{git_version}" }
                 end
               end
-              plain " from #{time_ago_in_words(server_start_time)} ago"
+              plain ", started #{time_ago_in_words(server_start_time)} ago"
             end
           end
         end

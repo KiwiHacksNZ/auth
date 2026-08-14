@@ -104,7 +104,7 @@ class Components::AuthWelcome < Components::Base
             plain Rails.application.config.git_version
           end
           if Rails.application.config.try(:server_start_time).present?
-            plain " from #{distance_of_time_in_words_to_now(Rails.application.config.server_start_time)} ago"
+            plain ", started #{distance_of_time_in_words_to_now(Rails.application.config.server_start_time)} ago"
           end
         end
       end

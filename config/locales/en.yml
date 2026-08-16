@@ -384,9 +384,9 @@ en:
     first_name: First name
     last_name: Last name
     email: Email
-    email_placeholder: orpheus@dino.mail
+    email_placeholder: kiki@dino.mail
     phone_number: Phone number
-    phone_number_placeholder: "+18028675309"
+    phone_number_placeholder: "+64 21 123 4567"
     birthday: Birthday
     country: Primary country
     country_select: Select a country...
@@ -641,7 +641,7 @@ en:
       uploading: Uploading your documents...
       privacy_info:
         review_time: "Review time: 1–2 business days"
-        privacy: "Privacy: Documents are encrypted and never shared with third parties. Access is limited to HCB staff during review, then core HQ staff for exceptional cases only."
+        privacy: "Privacy: Documents are encrypted and never shared with third parties. Access is limited to KiwiHacks staff during review, then core HQ staff for exceptional cases only."
         purpose: "Purpose: Used only for age verification and preventing duplicate accounts."
       submit_documents: Submit Documents
     status:

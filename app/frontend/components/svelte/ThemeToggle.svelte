@@ -11,7 +11,7 @@
   function apply(id) {
     current = id;
     document.documentElement.setAttribute('data-webtui-theme', id);
-    localStorage.setItem('hca-theme', id);
+    localStorage.setItem('kha-theme', id);
   }
 
   function toggle() {
@@ -24,7 +24,7 @@
   }
 
   onMount(() => {
-    const saved = localStorage.getItem('hca-theme');
+    const saved = localStorage.getItem('kha-theme');
     if (saved && themes.some(t => t.id === saved)) {
       apply(saved);
     }

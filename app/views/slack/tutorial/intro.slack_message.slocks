@@ -1,17 +1,15 @@
-image "https://cdn.hackclub.com/019c297b-5d42-7256-a5e5-7d8f9f7adcd5/welcome.gif", "Welcome to KiwiHacks!"
-
 scenario = @identity.onboarding_scenario_instance
 channels = scenario&.slack_channels || []
 
 if channels.length <= 1
   section <<~EOFD, markdown: true
     Right now you can only see <##{channels.first}>.
-    To access other channels, you must read and agree to our <https://hackclub.com/conduct|Code of Conduct>.
+    To access other channels, you must read and agree to our <https://kiwihacks.org/code-of-conduct|Code of Conduct>.
   EOFD
 else
   section <<~EOFD, markdown: true
     Right now you can only see a few channels.
-    To access the rest of KiwiHacks, you must read and agree to our <https://hackclub.com/conduct|Code of Conduct>.
+    To access the rest of KiwiHacks, you must read and agree to our <https://kiwihacks.org/code-of-conduct|Code of Conduct>.
   EOFD
 end
 

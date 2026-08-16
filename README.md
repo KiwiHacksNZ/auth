@@ -170,7 +170,11 @@ then set `OIDC_SIGNING_KEY` to the contents of `oidc_key.pem` (the whole thing i
 | `GOOGLE_PLACES_API_KEY` | address autocomplete |
 | `ANALYTICS_DATABASE_URL` | separate analytics DB (optional) |
 | `DISABLE_ANALYTICS` | set to "true" to disable Ahoy |
-| `SOURCE_COMMIT` | git commit for version display |
+| `SOURCE_COMMIT` | git commit for version display; only used when the image has no `REVISION` file (the Dockerfiles write one at build time) |
+| `GITHUB_REPOSITORY` | `owner/name` the version links to, defaults to `KiwiHacksNZ/auth` |
+| `SLACK_WORKSPACE_DOMAIN` | workspace the backend links Slack profiles to, defaults to `kiwihacks.slack.com` |
+| `SLACK_BOT_ICON_URL` | avatar for onboarding bot messages; unset means Slack's default |
+| `CONDUCT_BOT_ICON_URL` | avatar for the code-of-conduct welcome DM; unset means Slack's default |
 
 ## security
 

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setup_copy();
 
   // Apply saved theme before anything renders
-  const savedTheme = localStorage.getItem('hca-theme');
+  const savedTheme = localStorage.getItem('kha-theme');
   if (savedTheme) {
     document.documentElement.setAttribute('data-webtui-theme', savedTheme);
   }

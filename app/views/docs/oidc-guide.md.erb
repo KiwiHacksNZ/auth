@@ -92,7 +92,7 @@ Include the access token in the Authorization header:
 Authorization: Bearer idntk.abc123...
 ```
 
-Slack's OIDC solution provides a `picture` field in its claims that gives you a URL to the user's PFP. HCA doesn't currently have this feature, but you can get similar functionality with [cachet](https://cachet.dunkirk.sh/swagger#tag/users/GET/users/{slack_id}/r) if you take the Slack ID claim.
+Slack's OIDC solution provides a `picture` field in its claims that gives you a URL to the user's PFP. KHA doesn't currently have this feature, but you can get similar functionality with [cachet](https://cachet.dunkirk.sh/swagger#tag/users/GET/users/{slack_id}/r) if you take the Slack ID claim.
 
 ## Scopes and Claims
 
@@ -132,8 +132,8 @@ With scopes `openid profile email verification_status`:
   "aud": "your_client_id",
   "exp": 1700000000,
   "iat": 1699996400,
-  "name": "Heidi Trashworth",
-  "given_name": "Heidi",
+  "name": "Kiki Trashworth",
+  "given_name": "Kiki",
   "family_name": "Trashworth",
   "email": "racc@garbagemail.biz",
   "email_verified": true,
@@ -213,10 +213,10 @@ export const auth = betterAuth({
     genericOAuth({
       config: [
         {
-          providerId: "hackclub",
+          providerId: "kiwihacks",
           discoveryUrl: "<%= root_url %>.well-known/openid-configuration",
-          clientId: process.env.HACKCLUB_CLIENT_ID,
-          clientSecret: process.env.HACKCLUB_CLIENT_SECRET,
+          clientId: process.env.KIWIHACKS_CLIENT_ID,
+          clientSecret: process.env.KIWIHACKS_CLIENT_SECRET,
           scopes: ["openid", "profile", "email", "verification_status"],
         },
       ],
@@ -241,7 +241,7 @@ export const authClient = createAuthClient({
 
 ```typescript
 await authClient.signIn.oauth2({
-  providerId: "hackclub",
+  providerId: "kiwihacks",
   callbackURL: "/dashboard",
 })
 ```
@@ -251,7 +251,7 @@ Better Auth will automatically discover our endpoints, handle the OAuth flow, an
 <div class="banner info">
 <b>Callback URL:</b>
 <p>
-Better Auth uses <code>/api/auth/oauth2/callback/hackclub</code> as the callback URL by default. Make sure to add this to your app's redirect URIs when you create it.
+Better Auth uses <code>/api/auth/oauth2/callback/kiwihacks</code> as the callback URL by default. Make sure to add this to your app's redirect URIs when you create it.
 </p>
 </div>
 

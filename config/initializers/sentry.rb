@@ -1,7 +1,5 @@
-git_hash = ENV["SOURCE_COMMIT"] || `git rev-parse HEAD` rescue "unknown"
-short_hash = git_hash[0..7]
-is_dirty = `git status --porcelain`.strip.length > 0 rescue false
-git_version = is_dirty ? "#{short_hash}-dirty" : short_hash
+# Resolved in git_version.rb, which loads first.
+git_version = Rails.application.config.git_version
 
 Sentry.init do |config|
   config.dsn = ENV["SENTRY_DSN"]

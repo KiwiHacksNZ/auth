@@ -4,12 +4,12 @@ channels = scenario&.slack_channels || []
 if channels.length <= 1
   section <<~EOFD, markdown: true
     Right now you can only see <##{channels.first}>.
-    To access other channels, you must read and agree to our <https://kiwihacks.org/conduct|Code of Conduct>.
+    To access other channels, you must read and agree to our <https://kiwihacks.org/code-of-conduct|Code of Conduct>.
   EOFD
 else
   section <<~EOFD, markdown: true
     Right now you can only see a few channels.
-    To access the rest of KiwiHacks, you must read and agree to our <https://kiwihacks.org/conduct|Code of Conduct>.
+    To access the rest of KiwiHacks, you must read and agree to our <https://kiwihacks.org/code-of-conduct|Code of Conduct>.
   EOFD
 end
 

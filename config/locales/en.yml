@@ -386,7 +386,7 @@ en:
     email: Email
     email_placeholder: kiki@dino.mail
     phone_number: Phone number
-    phone_number_placeholder: "+18028675309"
+    phone_number_placeholder: "+64 21 123 4567"
     birthday: Birthday
     country: Primary country
     country_select: Select a country...

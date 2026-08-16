@@ -4,8 +4,8 @@ FactoryBot.define do
     last_name { "Trashworth" }
     sequence(:primary_email) { |n| "kiki#{n}@kiwihacks.org" }
     birthday { Date.parse("2005-06-15") }
-    country { "US" }
-    phone_number { "+18028675309" }
+    country { "NZ" }
+    phone_number { "+64211234567" }
     sequence(:slack_id) { |n| "U#{n.to_s.rjust(8, '0')}" }
     ysws_eligible { true }
     legal_first_name { "Hakkuun" }

@@ -23,7 +23,7 @@
 
 @layer components {
   /* Action bar — fixed top nav */
-  #hca-actionbar {
+  #kha-actionbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -39,7 +39,7 @@
   }
 
   /* Page body offset for fixed actionbar */
-  #hca-body {
+  #kha-body {
     padding-top: 2lh;
   }
 
@@ -121,7 +121,7 @@
 
   /* Responsive */
   @media (max-width: 64ch) {
-    #hca-actionbar .hca-user-context { display: none; }
+    #kha-actionbar .kha-user-context { display: none; }
   }
 
   /* Table — looks like box-="square" with column alignment */
@@ -200,7 +200,7 @@
   button[variant-="blue"], input[type=submit][variant-="blue"] { --button-primary: var(--blue); --button-secondary: var(--background0); }
 
   /* Environment indicator */
-  #hca-env {
+  #kha-env {
     position: fixed;
     bottom: 0;
     right: 0;

@@ -1,14 +1,14 @@
 FactoryBot.define do
   factory :address do
     association :identity
-    first_name { "Helena" }
-    last_name { "Ackfoundation" }
-    line_1 { "8605 Santa Monica Blvd" }
-    line_2 { "PMB 86294" }
-    city { "West Hollywood" }
-    state { "CA" }
-    postal_code { "90069" }
-    country { "US" }
-    phone_number { "+18028675309" }
+    first_name { "Kiki" }
+    last_name { "Hackworth" }
+    line_1 { "12 Queen Street" }
+    line_2 { "Level 3" }
+    city { "Auckland" }
+    state { "Auckland" }
+    postal_code { "1010" }
+    country { "NZ" }
+    phone_number { "+64211234567" }
   end
 end

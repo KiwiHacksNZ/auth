@@ -25,8 +25,8 @@ namespace :backend do
 
     # ─── Programs ───────────────────────────────────────────────
     programs = [
-      Program.create!(name: "Hack Club YSWS", redirect_uri: "https://ysws.hackclub.com/callback", scopes: "basic_info email name verification_status", trust_level: :hq_official),
-      Program.create!(name: "Sprig Console", redirect_uri: "https://sprig.hackclub.com/callback", scopes: "basic_info email name slack_id", trust_level: :hq_official),
+      Program.create!(name: "KiwiHacks YSWS", redirect_uri: "https://ysws.kiwihacks.org/callback", scopes: "basic_info email name verification_status", trust_level: :hq_official),
+      Program.create!(name: "Kiwi Console", redirect_uri: "https://console.kiwihacks.org/callback", scopes: "basic_info email name slack_id", trust_level: :hq_official),
       Program.create!(name: Faker::App.name, redirect_uri: "https://#{Faker::Internet.domain_name}/callback", scopes: "openid email name slack_id", trust_level: :community_trusted),
       Program.create!(name: Faker::App.name, redirect_uri: "https://#{Faker::Internet.domain_name}/callback", scopes: "openid profile", trust_level: :community_untrusted)
     ]
@@ -46,7 +46,7 @@ namespace :backend do
       merged = defaults.merge(attrs)
       merged[:legal_first_name] ||= merged[:first_name]
       merged[:legal_last_name] ||= merged[:last_name]
-      merged[:primary_email] ||= "#{merged[:first_name].downcase}.#{merged[:last_name].downcase}@synth.hackclub.com"
+      merged[:primary_email] ||= "#{merged[:first_name].downcase}.#{merged[:last_name].downcase}@synth.kiwihacks.org"
       Identity.create!(**merged)
     }
 
@@ -176,7 +176,7 @@ namespace :backend do
       i = mk.call(
         first_name: target.first_name,
         last_name: "#{target.last_name}-#{Faker::Name.suffix}",
-        primary_email: "#{target.first_name.downcase}+dup#{n}@synth.hackclub.com",
+        primary_email: "#{target.first_name.downcase}+dup#{n}@synth.kiwihacks.org",
       )
       doc = Identity::Document.new(identity: i, document_type: :government_id)
       doc.save!(validate: false)
@@ -316,7 +316,7 @@ namespace :backend do
       next if Program.exists?(name: name) # skip if already exists
       Program.create!(
         name: name,
-        redirect_uri: "https://#{name.downcase}.hackclub.com/callback",
+        redirect_uri: "https://#{name.downcase}.kiwihacks.org/callback",
         scopes: "basic_info email name verification_status slack_id",
         trust_level: :hq_official,
         active: true,
@@ -379,7 +379,7 @@ namespace :backend do
 
     puts "removing synthetic seed data..."
 
-    ids = Identity.where("primary_email LIKE '%@synth.hackclub.com'").pluck(:id)
+    ids = Identity.where("primary_email LIKE '%@synth.kiwihacks.org'").pluck(:id)
     bu_ids = Backend::User.where(identity_id: ids).pluck(:id)
 
     PublicActivity::Activity.where(trackable_type: "Verification", trackable_id: Verification.where(identity_id: ids).pluck(:id)).delete_all

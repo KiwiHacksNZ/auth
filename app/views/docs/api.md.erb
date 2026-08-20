@@ -51,7 +51,7 @@ Get the authenticated user's identity information based on granted scopes.
 
 Check the verification status of a user by their ID, email, or Slack ID. This is a public endpoint that doesn't require authentication.
 
-<%= render Components::APIExample.new(method: "GET", url: api_external_check_url(email: "kiki@kiwihacks.org"), path_only: true) %>
+<%= render Components::APIExample.new(method: "GET", url: api_external_check_url(email: "kiki@example.com"), path_only: true) %>
 
 **Authentication:** Not required
 
@@ -171,7 +171,7 @@ List all identities that have authorized your application.
 ```json
 <%
   identities = [
-    FactoryBot.build_stubbed(:identity, first_name: "Heidi", last_name: "Latta"),
+    FactoryBot.build_stubbed(:identity, first_name: "Kiki", last_name: "Latta"),
     FactoryBot.build_stubbed(:identity, last_name: "Wofford")
   ]
 %><%= render_api_example(template: "api/v1/identities/index", identities: identities) %>

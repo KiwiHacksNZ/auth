@@ -2,11 +2,6 @@ shared:
   are_we_enterprise_yet_2025_10_21: enables Slack Enterprise Grid features (SAML, SCIM provisioning)
   email_change_2025_10_09: allows users to change their primary email address
   allow_adult_registration_2026_05_28: allows users 19+ to register without an adult-accepting program
-  app_card_stardance_2026_05_30: enables Stardance app card on the welcome page
-  app_card_beest_2026_04_03: enables Beest app card on the welcome page
-  app_card_flavortown_2025_12_09: enables Flavortown app card on the welcome page
-  app_card_hctg_2026_03_19: enables HCTG app card on the welcome page
-  app_card_blueprint_2026_01_14: enables Blueprint app card on the welcome page
   full_user_open_floodgates_2026_04_06: provisions users as full Slack members instead of multi-channel guests
   dev_allow_manual_flow_2026_05_27: enables the manual document verification flow for an actor
   disable_slack_invites_2025_12_08: suppresses Slack SCIM provisioning for an actor

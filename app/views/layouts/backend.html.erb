@@ -16,9 +16,9 @@
     <%= vite_javascript_tag 'backend' %>
   </head>
   <body>
-    <row id="hca-actionbar" align-="center between">
+    <row id="kha-actionbar" align-="center between">
       <row gap-="1" align-="center">
-        <a href="<%= backend_root_path %>" style="text-decoration: none; color: var(--foreground0);"><b>HCA</b></a>
+        <a href="<%= backend_root_path %>" style="text-decoration: none; color: var(--foreground0);"><b>KHA</b></a>
         <% breadcrumbs.each do |crumb| %>
           <span style="color: var(--foreground2);">/</span>
           <% if crumb[:path] %>
@@ -29,7 +29,7 @@
         <% end %>
       </row>
       <row gap-="2" align-="center">
-        <span class="hca-user-context" style="color: var(--foreground2);">
+        <span class="kha-user-context" style="color: var(--foreground2);">
           <% if current_user.identity %>
             <a href="<%= backend_identity_path(current_user.identity) %>" style="color: var(--foreground2);"><%= current_user.display_name %></a>
           <% else %>
@@ -47,7 +47,7 @@
     <script type="application/json" id="hints-data"><%= raw({ hints: current_hints.map { |h| { slug: h.slug, shortcuts: h.shortcuts } }, slugs: current_hints.map { |h| h.slug.to_s } }.to_json) %></script>
     <script type="application/json" id="keyboard-shortcuts-data"><%= raw(keyboard_shortcuts.to_json) %></script>
     <!-- erblint:enable ScriptType -->
-    <column id="hca-body" self-="grow">
+    <column id="kha-body" self-="grow">
       <%= render "backend/shared/flash" %>
       <% if has_unseen_hints? %>
         <div pad-="2 0">
@@ -58,6 +58,6 @@
       <% end %>
       <%= yield %>
     </column>
-    <div id="hca-env"><%= Rails.env %> / <% if Rails.application.config.commit_link %><a href="<%= Rails.application.config.commit_link %>" target="_blank" style="color: inherit;"><%= Rails.application.config.git_version %></a><% else %><%= Rails.application.config.git_version %><% end %></div>
+    <div id="kha-env"><%= Rails.env %> / <% if Rails.application.config.commit_link %><a href="<%= Rails.application.config.commit_link %>" target="_blank" style="color: inherit;"><%= Rails.application.config.git_version %></a><% else %><%= Rails.application.config.git_version %><% end %></div>
   </body>
 </html>

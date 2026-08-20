@@ -6,7 +6,7 @@ module ResemblanceNoticerEngine
       base_email = extract_base_email(identity.primary_email)
 
       # i'm still not convinced i understand why this SQL works...
-      # theoretically it turns nora+1@hackclub.com and n.o.ra@hackclub.com into nora@hackclub.com?
+      # theoretically it turns kiki+1@kiwihacks.org and k.i.k.i@kiwihacks.org into kiki@kiwihacks.org?
       normalized_email_sql = <<~SQL.squish
         CONCAT(
           REPLACE(SPLIT_PART(SPLIT_PART(primary_email, '@', 1), '+', 1), '.', ''),

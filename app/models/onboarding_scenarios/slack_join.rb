@@ -21,7 +21,7 @@ module OnboardingScenarios
     end
 
     def slack_channels
-      channels = Rails.configuration.slack_channels.slice(:welcome_to_hack_club).values
+      channels = Rails.configuration.slack_channels.slice(:welcome_to_kiwihacks).values
       channels += promotion_channels if slack_user_type == :full_member
       channels
     end
@@ -30,6 +30,6 @@ module OnboardingScenarios
 
     def send_ephemeral_in_channel? = true
 
-    def ephemeral_channel = Rails.configuration.slack_channels[:welcome_to_hack_club]
+    def ephemeral_channel = Rails.configuration.slack_channels[:welcome_to_kiwihacks]
   end
 end

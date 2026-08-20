@@ -52,3 +52,5 @@ node_modules
 /config/credentials/uat.key
 
 public/.vite
+# Commit SHA stamped into the image at build time.
+/REVISION

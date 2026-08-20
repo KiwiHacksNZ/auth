@@ -31,7 +31,9 @@ development:
       allow_unsigned_requests: true
 
   idp_metadata:
-    entity_id: https://identity.hackclub.dev
+    # Entity IDs are opaque identifiers, not fetched URLs, so each environment
+    # gets its own to keep a dev IdP from ever being mistaken for production.
+    entity_id: https://account-dev.kiwihacks.com
     single_sign_on_services:
       - location: http://localhost:3000/saml/auth
         binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
@@ -54,9 +56,9 @@ shared:
         email_addresses: [niko@kiwihacks.org]
 staging:
   idp_metadata:
-    entity_id: https://hca.dinosaurbbq.org
+    entity_id: https://account-staging.kiwihacks.com
     single_sign_on_services:
-      - location: https://hca.dinosaurbbq.org/saml/auth
+      - location: https://account-staging.kiwihacks.com/saml/auth
         binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
   service_providers:
     - slug: samltool
@@ -69,10 +71,10 @@ staging:
           binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
 uat:
   idp_metadata:
-    entity_id: https://identity-uat.hackclub.dev
+    entity_id: https://account-uat.kiwihacks.com
 production:
   idp_metadata:
-    entity_id: https://auth.kiwihacks.org
+    entity_id: https://account.kiwihacks.com
     single_sign_on_services:
-      - location: https://auth.kiwihacks.org/saml/auth
+      - location: https://account.kiwihacks.com/saml/auth
         binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST

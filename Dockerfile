@@ -75,6 +75,17 @@ RUN yarn install --frozen-lockfile
 # Copy application code
 COPY . .
 
+# Record the commit being built so the running app can report its version, then
+# drop the git directory so it never reaches the final image.
+ARG SOURCE_COMMIT=""
+RUN if [ -n "$SOURCE_COMMIT" ]; then \
+      echo "$SOURCE_COMMIT" > REVISION; \
+    else \
+      git config --global --add safe.directory /rails; \
+      git rev-parse HEAD > REVISION 2>/dev/null || echo unknown > REVISION; \
+    fi && \
+    rm -rf .git
+
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/ && \
     mv config/credentials config/credentials.bak && \

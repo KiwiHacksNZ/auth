@@ -359,6 +359,8 @@ en:
             title: See your name
           slack_id:
             title: See your Slack ID
+          discord_id:
+            title: See your Discord ID
           verification_status:
             title: See your verification status
           profile:

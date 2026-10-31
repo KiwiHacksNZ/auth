@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_03_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_31_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -317,9 +317,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_03_000001) do
     t.boolean "is_alum", default: false
     t.boolean "can_hq_officialize", default: false, null: false
     t.boolean "disallow_slack", default: false, null: false
+    t.string "discord_id"
     t.index "lower((primary_email)::text)", name: "idx_identities_unique_primary_email", unique: true, where: "(deleted_at IS NULL)"
     t.index ["aadhaar_number_bidx"], name: "index_identities_on_aadhaar_number_bidx", unique: true
     t.index ["deleted_at"], name: "index_identities_on_deleted_at"
+    t.index ["discord_id"], name: "index_identities_on_discord_id"
     t.index ["legacy_migrated_at"], name: "index_identities_on_legacy_migrated_at"
     t.index ["primary_address_id"], name: "index_identities_on_primary_address_id"
     t.index ["slack_id"], name: "index_identities_on_slack_id"

@@ -74,6 +74,7 @@ Doorkeeper::OpenidConnect.configure do
 
     # KHA-custom claims:
     normal_claim(:slack_id, scope: :slack_id, response: [ :id_token, :user_info ]) { |ident| ident.slack_id }
+    normal_claim(:discord_id, scope: :discord_id, response: [ :id_token, :user_info ]) { |ident| ident.discord_id }
     normal_claim(:verification_status, scope: :verification_status, response: [ :id_token, :user_info ]) { |ident| ident.verification_status }
     normal_claim(:ysws_eligible, scope: :verification_status, response: [ :id_token, :user_info ]) { |ident| ident.ysws_eligible }
   end

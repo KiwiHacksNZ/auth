@@ -6,7 +6,7 @@ RSpec.describe OAuthScope do
       scope_names = described_class::ALL.map(&:name)
       expect(scope_names).to contain_exactly(
         "openid", "email", "name", "profile", "phone", "birthdate",
-        "address", "verification_status", "slack_id", "legal_name",
+        "address", "verification_status", "slack_id", "discord_id", "legal_name",
         "basic_info", "set_slack_id"
       )
     end
@@ -134,7 +134,7 @@ RSpec.describe OAuthScope do
   describe "COMMUNITY_ALLOWED" do
     it "contains only safe scopes for community apps" do
       expect(described_class::COMMUNITY_ALLOWED).to contain_exactly(
-        "openid", "profile", "email", "name", "slack_id", "verification_status"
+        "openid", "profile", "email", "name", "slack_id", "discord_id", "verification_status"
       )
     end
   end

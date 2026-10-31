@@ -74,6 +74,7 @@ en:
           verification_status: 'Verification status'
           ysws_eligible: 'YSWS eligible'
           slack_id: 'Slack ID'
+          discord_id: 'Discord ID'
           phone: 'Phone number'
           birthdate: 'Birthday'
           legal_name: 'Legal name'

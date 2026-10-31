@@ -420,12 +420,19 @@ class LoginsController < ApplicationController
     end
 
     # Another submit of this form already used the code for this attempt (double tap);
-    # send this request where that one went instead of showing a code error.
+    # send this request where that one went instead of showing a code error. This request
+    # doesn't carry the other one's session cookie, so go straight to the destination: if the
+    # browser kept that cookie the user lands there signed in, and if not the destination
+    # sends them back through login with return_to intact.
     def followed_concurrent_verification
         @attempt.reload
         return false if @attempt.email_available?
 
-        @attempt.complete? ? redirect_completed_attempt : redirect_to_next_factor
+        if @attempt.complete?
+            redirect_to url_from(@attempt.return_to) || root_path
+        else
+            redirect_to_next_factor
+        end
         true
     end
 

@@ -89,8 +89,28 @@ RSpec.describe "Logins return_to", type: :request do
 
       post verify_login_attempt_path(id: attempt.to_param), params: { code: code.code }
 
-      expect(response).to redirect_to(login_path(return_to: oauth_return_to))
-      expect(flash[:error]).not_to eq("Invalid or expired code, please try again")
+      expect(response).to redirect_to(oauth_return_to)
+      expect(flash[:error]).to be_nil
+    end
+
+    it "sends the second submit home when the login has no return_to" do
+      attempt = start_attempt(return_to: nil)
+      code = Identity::V2LoginCode.generate(identity)
+      finish_concurrently(attempt, code)
+
+      post verify_login_attempt_path(id: attempt.to_param), params: { code: code.code }
+
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "ignores an unsafe stored return_to on the second submit" do
+      attempt = start_attempt(return_to: "https://evil.example/phish")
+      code = Identity::V2LoginCode.generate(identity)
+      finish_concurrently(attempt, code)
+
+      post verify_login_attempt_path(id: attempt.to_param), params: { code: code.code }
+
+      expect(response).to redirect_to(root_path)
     end
 
     it "sends the second submit to the next factor when 2FA is still needed" do

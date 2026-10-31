@@ -25,7 +25,7 @@ class EmailChangeMailerPreview < ActionMailer::Preview
       id: 1,
       identity: identity,
       old_email: identity.primary_email,
-      new_email: "newemail@example.com",
+      new_email: "kiki.new@kiwihacks.org",
       old_email_token: SecureRandom.urlsafe_base64(32),
       new_email_token: SecureRandom.urlsafe_base64(32),
       expires_at: 24.hours.from_now

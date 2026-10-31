@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module SessionsHelper
+  include SafeUrlValidation
+
   class AccountLockedError < StandardError; end
 
   def sign_in(identity:, fingerprint_info: {}, impersonate: false)
@@ -27,13 +29,6 @@ module SessionsHelper
       secure: !Rails.env.development? && !Rails.env.test?,
       same_site: :lax
     }
-    cookies.encrypted[:signed_user] = {
-      value: identity.signed_id(expires_in: 2.months, purpose: :remember_me),
-      expires: 2.months.from_now,
-      httponly: true,
-      secure: !Rails.env.development? && !Rails.env.test?,
-      same_site: :lax
-    }
     ident_session = identity.sessions.build(
       session_token:,
       fingerprint: fingerprint_info[:fingerprint],
@@ -51,11 +46,19 @@ module SessionsHelper
   end
 
   def ensure_no_user!
-    if identity_signed_in?
+    return unless identity_signed_in?
+
+    # A second tab, back button or double submit can land here mid-flow; finish the trip
+    # to the client app instead of stranding the user on our home page.
+    if (return_to = pending_return_to)
+      redirect_to return_to
+    else
       flash[:info] = "you're already logged in, silly!"
       redirect_to root_path
     end
   end
+
+  def pending_return_to = url_from(@attempt&.return_to) || url_from(params[:return_to])
 
   def signed_in? = !current_identity.nil?
 
@@ -89,6 +92,7 @@ module SessionsHelper
     end
 
     cookies.delete(:session_token)
+    cookies.delete(:signed_user)
     self.current_identity = nil
 
     reset_session

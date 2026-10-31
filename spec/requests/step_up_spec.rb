@@ -15,9 +15,15 @@ RSpec.describe "StepUp", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:identity_signed_in?).and_return(true)
   end
 
+  # The step-up page pins the action in the session; later POSTs act on that, not on params.
+  def begin_step_up(action_type)
+    get new_step_up_path(action_type: action_type)
+  end
+
   describe "email step-up method blocked for email_change action" do
     describe "POST /step_up/send_email_code" do
       it "rejects email code request for email_change action" do
+        begin_step_up("email_change")
         post "/step_up/send_email_code", params: { action_type: "email_change", return_to: "/email_changes/new" }
 
         expect(response).to redirect_to(new_step_up_path(action_type: "email_change", return_to: "/email_changes/new"))
@@ -25,6 +31,7 @@ RSpec.describe "StepUp", type: :request do
       end
 
       it "allows email code request for other actions" do
+        begin_step_up("remove_totp")
         post "/step_up/send_email_code", params: { action_type: "remove_totp", return_to: "/security" }
 
         expect(response).to redirect_to(new_step_up_path(action_type: "remove_totp", method: :email, return_to: "/security", code_sent: true))
@@ -42,6 +49,7 @@ RSpec.describe "StepUp", type: :request do
       it "rejects email method verification for email_change action" do
         login_code = identity.v2_login_codes.create!
 
+        begin_step_up("email_change")
         post "/step_up/verify", params: {
           action_type: "email_change",
           method: "email",
@@ -56,6 +64,7 @@ RSpec.describe "StepUp", type: :request do
       it "allows TOTP verification for email_change action" do
         code = ROTP::TOTP.new(totp.secret).now
 
+        begin_step_up("email_change")
         post "/step_up/verify", params: {
           action_type: "email_change",
           method: "totp",
@@ -71,6 +80,7 @@ RSpec.describe "StepUp", type: :request do
       it "binds step-up to specific action type" do
         code = ROTP::TOTP.new(totp.secret).now
 
+        begin_step_up("oidc_reauth")
         post "/step_up/verify", params: {
           action_type: "oidc_reauth",
           method: "totp",
@@ -86,11 +96,35 @@ RSpec.describe "StepUp", type: :request do
 
     describe "POST /step_up/resend_email" do
       it "rejects resend for email_change action" do
+        begin_step_up("email_change")
         post "/step_up/resend_email", params: { action_type: "email_change", return_to: "/email_changes/new" }
 
         expect(response).to redirect_to(new_step_up_path(action_type: "email_change", return_to: "/email_changes/new"))
         expect(flash[:error]).to eq("Email verification is not available for this action")
       end
+    end
+  end
+
+  describe "pending step-up requirement" do
+    it "rejects verify when no step-up was started" do
+      totp = identity.totps.create!
+      totp.mark_verified!
+
+      post "/step_up/verify", params: { action_type: "remove_totp", method: "totp", code: ROTP::TOTP.new(totp.secret).now }
+
+      expect(response).to redirect_to(new_step_up_path(action_type: "remove_totp"))
+      expect(identity.reload.totp).to be_present
+    end
+
+    it "acts on the pinned action rather than a tampered action_type param" do
+      totp = identity.totps.create!
+      totp.mark_verified!
+      begin_step_up("oidc_reauth")
+
+      post "/step_up/verify", params: { action_type: "remove_totp", method: "totp", code: ROTP::TOTP.new(totp.secret).now }
+
+      expect(session.reload.last_step_up_action).to eq("oidc_reauth")
+      expect(identity.reload.totp).to be_present
     end
   end
 end

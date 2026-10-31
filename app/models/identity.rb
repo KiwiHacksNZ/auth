@@ -36,7 +36,7 @@
 #  fk_rails_...  (primary_address_id => addresses.id)
 #
 class Identity < ApplicationRecord
-  has_paper_trail
+  has_paper_trail skip: %i[aadhaar_number_ciphertext aadhaar_number_bidx]
   acts_as_paranoid
   include PublicActivity::Model
 
@@ -48,6 +48,8 @@ class Identity < ApplicationRecord
   set_public_id_prefix "ident"
 
   has_country_enum
+
+  attr_accessor :suggested_email, :email_typo_confirmed, :typo_dismissable
 
   has_many :sessions, class_name: "IdentitySession", dependent: :destroy
   has_many :login_attempts, dependent: :destroy
@@ -90,8 +92,9 @@ class Identity < ApplicationRecord
   validates :primary_email, uniqueness: { conditions: -> { where(deleted_at: nil) } }
   validate :validate_primary_email, if: -> { new_record? || primary_email_changed? }
   validate :validate_email_not_tombstoned, if: -> { new_record? || primary_email_changed? }
+  validate :country_not_sanctioned, if: -> { new_record? || country_changed? }
 
-  validates :slack_id, uniqueness: { conditions: -> { where(deleted_at: nil) } }, allow_blank: true
+  validates :slack_id, uniqueness: { conditions: -> { where(deleted_at: nil) } }, format: { with: /\AU[A-Z0-9]+\z/ }, allow_blank: true
   validates :aadhaar_number, uniqueness: true, allow_blank: true
   validates :aadhaar_number, format: { with: /\A\d{12}\z/, message: "must be 12 digits" }, if: -> { aadhaar_number.present? }
 
@@ -309,7 +312,7 @@ class Identity < ApplicationRecord
 
   def backup_codes_enabled? = backup_codes.active.any?
 
-  def webauthn_enabled? = webauthn_credentials.any?
+  def webauthn_enabled? = webauthn_credentials.active.any?
 
   # Encode identity ID as base64url for WebAuthn user.id
   # Uses 64-bit unsigned big-endian binary format
@@ -331,7 +334,7 @@ class Identity < ApplicationRecord
   def two_factor_methods
     [
       totps.verified,
-      webauthn_credentials
+      webauthn_credentials.active
       # Future: sms_two_factors.verified,
     ].flatten.compact
   end
@@ -393,6 +396,14 @@ class Identity < ApplicationRecord
     end
   end
 
+  def country_not_sanctioned
+    return unless country.present?
+    sanctioned = Rails.configuration.try(:sanctioned_countries) || []
+    if country.to_s.in?(sanctioned)
+      errors.add(:country, "is in a restricted region")
+    end
+  end
+
   def birthday_must_be_at_least_six_years_ago
     return unless birthday.present?
 
@@ -417,6 +428,20 @@ class Identity < ApplicationRecord
     unless address.valid?
       errors.add(:primary_email, I18n.t("errors.attributes.primary_email.invalid_format"))
       return
+    end
+
+    if primary_email.match?(/\A"/)
+      errors.add(:primary_email, I18n.t("errors.attributes.primary_email.invalid_format"))
+      return
+    end
+
+    if new_record? && !email_typo_confirmed
+      self.suggested_email = EmailDomainSuggester.suggest(primary_email)
+      if suggested_email
+        self.typo_dismissable = !(Rails.env.production? && address.disposable_domain?)
+        errors.add(:primary_email, :typo)
+        return
+      end
     end
 
     return unless Rails.env.production?

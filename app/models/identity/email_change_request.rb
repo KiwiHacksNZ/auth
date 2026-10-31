@@ -130,7 +130,15 @@ class Identity::EmailChangeRequest < ApplicationRecord
       return unless pending?
       return if completed?
 
+      identity.reload
+      unless identity.primary_email == old_email
+        update!(cancelled_at: Time.current)
+        return
+      end
+
       identity.update!(primary_email: new_email)
+      identity.sessions.not_expired.update_all(signed_out_at: Time.current, expires_at: Time.current)
+      identity.all_access_tokens.where(revoked_at: nil).update_all(revoked_at: Time.current)
       update!(completed_at: Time.current)
       identity.create_activity :email_changed,
         owner: identity,
@@ -198,6 +206,11 @@ class Identity::EmailChangeRequest < ApplicationRecord
     address = ValidEmail2::Address.new(new_email)
 
     unless address.valid?
+      errors.add(:new_email, I18n.t("errors.attributes.new_email.invalid_format", default: "is invalid"))
+      return
+    end
+
+    if new_email.match?(/\A"/)
       errors.add(:new_email, I18n.t("errors.attributes.new_email.invalid_format", default: "is invalid"))
       return
     end

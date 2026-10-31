@@ -140,11 +140,12 @@
   </row>
 
   <%# === Feature Flags === %>
+  <% if current_user&.super_admin? || current_user&.manual_document_verifier? %>
   <div is-="separator"></div>
   <details>
     <summary style="color: var(--foreground2); cursor: pointer;">feature flags</summary>
     <column gap-="0">
-      <% Flipper.features.sort_by(&:name).reject { |f| Rails.env.production? && f.name.start_with?("dev_") }.each do |flag| %>
+      <% Flipper.features.sort_by { |f| f.name.to_s }.reject { |f| Rails.env.production? && f.name.to_s.start_with?("dev_") }.each do |flag| %>
         <% global = flag.state == :on %>
         <% user_enabled = flag.enabled?(@identity) %>
         <% desc = Rails.configuration.flipper_features[flag.name] %>
@@ -183,9 +184,10 @@
       <% end %>
     </column>
   </details>
+  <% end %>
 
   <%# === Recent Sessions === %>
-  <% if @sessions.any? %>
+  <% if @sessions.any? && (current_user&.super_admin? || current_user&.manual_document_verifier?) %>
     <div is-="separator"></div>
     <details>
       <summary style="color: var(--foreground2); cursor: pointer;">recent sessions (<%= @active_session_count %> active)
@@ -308,7 +310,7 @@
   <% end %>
 
   <%# === Audit log === %>
-  <% if @activities.any? %>
+  <% if @activities.any? && (current_user&.super_admin? || current_user&.manual_document_verifier?) %>
     <div is-="separator"></div>
     <details>
       <summary style="color: var(--foreground2); cursor: pointer;">audit log (<%= @activities.size %>)</summary>

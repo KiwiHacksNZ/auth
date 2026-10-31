@@ -54,8 +54,12 @@ class LoginsController < ApplicationController
             track_event("login.code_sent", is_signup: attempt.provenance == "signup", scenario: analytics_scenario_from_return_to(@return_to))
             redirect_to login_attempt_path(id: attempt.to_param), status: :see_other
         end
-    rescue => e
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
         flash[:error] = e.message
+        redirect_to login_path(return_to: @return_to)
+    rescue => e
+        Rails.logger.error "Login create error: #{e.class}: #{e.message}"
+        flash[:error] = "Something went wrong, please try again"
         redirect_to login_path(return_to: @return_to)
     end
 
@@ -73,7 +77,7 @@ class LoginsController < ApplicationController
         flash.clear
 
         code = params[:code].to_s.strip.gsub(/[^0-9]/, "")
-        login_code = Identity::V2LoginCode.active.find_by(identity: @identity, code: code)
+        login_code = Identity::V2LoginCode.active.where(purpose: "login").find_by(identity: @identity, code: code)
 
         unless login_code
             track_event("login.code_failed", reason: "invalid", scenario: analytics_scenario_from_return_to(@attempt.return_to))
@@ -84,8 +88,7 @@ class LoginsController < ApplicationController
 
         # Ensure this login attempt hasn't already created a session
         if @attempt.session.present?
-            flash[:error] = "This login has already been completed"
-            redirect_to login_attempt_path(id: @attempt.to_param)
+            redirect_completed_attempt
             return
         end
 
@@ -113,7 +116,7 @@ class LoginsController < ApplicationController
         handle_post_verification_redirect
     rescue SessionsHelper::AccountLockedError => e
         flash[:error] = e.message
-        redirect_to login_path
+        redirect_to login_path(return_to: url_from(@attempt.return_to))
     end
 
     def resend
@@ -164,7 +167,11 @@ class LoginsController < ApplicationController
             return
         end
 
-        backup.mark_used!
+        unless backup.consume_atomically!
+            flash.now[:error] = "This backup code has already been used"
+            render :backup_code, status: :unprocessable_entity
+            return
+        end
         track_event("mfa.backup_code_used", scenario: analytics_scenario_from_return_to(@attempt.return_to))
 
         factors = (@attempt.authentication_factors || {}).dup
@@ -188,7 +195,7 @@ class LoginsController < ApplicationController
         options = generate_webauthn_authentication_options(
             @identity,
             session_key: WEBAUTHN_SESSION_KEY,
-            user_verification: "preferred"
+            user_verification: "required"
         )
         render json: options
     end
@@ -215,6 +222,10 @@ class LoginsController < ApplicationController
         @attempt.update!(authentication_factors: factors)
 
         handle_post_verification_redirect
+    rescue WebauthnCredentialCompromisedError => e
+        Rails.logger.warn "Login blocked: compromised credential detected for identity #{@identity.id}"
+        flash.now[:error] = "Security issue detected with your passkey. It has been disabled for your protection. Please use another login method or register a new passkey."
+        render :webauthn, status: :unprocessable_entity
     rescue WebAuthn::Error => e
         Rails.logger.error "WebAuthn authentication error: #{e.message}"
         flash.now[:error] = "Passkey verification failed. Please try again or use email code."
@@ -233,8 +244,13 @@ class LoginsController < ApplicationController
         @identity = @attempt.identity
         @onboarding_scenario = @identity.onboarding_scenario_instance
     rescue ActiveRecord::RecordNotFound
+        # The attempt may have just been completed by a double submit or have expired;
+        # keep its return_to so the user still ends up back at the client app.
+        return_to = url_from(LoginAttempt.find_by_hashid(params[:id])&.return_to)
+        return redirect_to return_to if identity_signed_in? && return_to
+
         flash[:error] = "Invalid login attempt, please start again"
-        redirect_to login_path
+        redirect_to login_path(return_to:)
     end
 
     def already_logged_in
@@ -251,13 +267,13 @@ class LoginsController < ApplicationController
         cookie_token = cookies.signed["browser_token_#{@attempt.to_param}"]
         unless cookie_token
             flash[:error] = "This doesn't seem to be the browser who began this login; please ensure cookies are enabled"
-            redirect_to login_path
+            redirect_to login_path(return_to: url_from(@attempt.return_to))
             return false
         end
 
         unless ActiveSupport::SecurityUtils.secure_compare(@attempt.browser_token, cookie_token)
             flash[:error] = "Browser token mismatch; please ensure cookies are enabled"
-            redirect_to login_path
+            redirect_to login_path(return_to: url_from(@attempt.return_to))
             return false
         end
 
@@ -287,7 +303,7 @@ class LoginsController < ApplicationController
     end
 
     def send_v2_login_code(identity, attempt = nil)
-        code = Identity::V2LoginCode.create!(identity: identity, ip_address: request.remote_ip, user_agent: request.user_agent)
+        code = Identity::V2LoginCode.generate(identity, ip_address: request.remote_ip, user_agent: request.user_agent)
         LoopsLoginCodeJob.perform_later(code.id)
     end
 
@@ -296,10 +312,7 @@ class LoginsController < ApplicationController
         LoginAttempt.transaction do
             @attempt.lock!
 
-            if @attempt.session_id.present?
-                flash[:error] = "This login has already been completed"
-                return redirect_to login_attempt_path(id: @attempt.to_param)
-            end
+            return redirect_completed_attempt if @attempt.session_id.present?
 
             @attempt.mark_complete! if @attempt.may_mark_complete?
 
@@ -315,7 +328,7 @@ class LoginsController < ApplicationController
         track_event("login.completed", has_mfa: @identity.use_two_factor_authentication?, next_action: @attempt.next_action, scenario: analytics_scenario_from_return_to(@attempt.return_to))
 
         scenario = scenario_for_identity(@identity)
-        if @identity.slack_id.blank? && (scenario.should_create_slack? || @attempt.next_action == "slack")
+        if @identity.slack_id.blank? && !@identity.disallow_slack && (scenario.should_create_slack? || @attempt.next_action == "slack")
             provision_slack_on_first_login(scenario)
         end
 
@@ -386,6 +399,15 @@ class LoginsController < ApplicationController
         end
     end
 
+    # Another submit already finished this login; send the user where that one went.
+    def redirect_completed_attempt
+        return_to = url_from(@attempt.return_to)
+        return redirect_to(return_to || root_path) if identity_signed_in?
+
+        flash[:error] = "This login has already been completed"
+        redirect_to login_path(return_to:)
+    end
+
     def redirect_to_next_factor
         available = @attempt.available_factors
 
@@ -398,7 +420,7 @@ class LoginsController < ApplicationController
         else
             # No available factors - this shouldn't happen
             flash[:error] = "Unable to complete authentication"
-            redirect_to login_path
+            redirect_to login_path(return_to: url_from(@attempt.return_to))
         end
     end
 

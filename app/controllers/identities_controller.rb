@@ -34,6 +34,9 @@ class IdentitiesController < ApplicationController
         @prefill_attributes[:last_name] ||= params[:last_name] if params[:last_name].present?
         @prefill_attributes[:country] ||= params[:country] if params[:country].present?
         @prefill_attributes[:birthday] ||= params[:birthday] if params[:birthday].present?
+        @prefill_attributes[:phone_number] ||= params[:phone_number] if params[:phone_number].present?
+        # Extract prefill params embedded in the OAuth return_to URL
+        prefill_from_oauth_return_to.each { |k, v| @prefill_attributes[k] ||= v }
         # Prefill country from GeoIP if not provided
         @prefill_attributes[:country] ||= detected_country_alpha2
         @identity = Identity.new(@prefill_attributes)
@@ -109,6 +112,7 @@ class IdentitiesController < ApplicationController
         attrs[:country] ||= detected_country_alpha2
         attrs[:onboarding_scenario] = @onboarding_scenario.class.slug
         @identity = Identity.new(attrs)
+        @identity.email_typo_confirmed = params[:email_typo_confirmed] == "1"
 
         if @identity.save
             track_event("signup.completed", scenario: analytics_scenario, country: @identity.country)
@@ -131,10 +135,13 @@ class IdentitiesController < ApplicationController
             # Set browser token cookie for security
             cookies.signed["browser_token_#{login_attempt.to_param}"] = {
                 value: login_attempt.browser_token,
-                expires: LoginAttempt::EXPIRATION.from_now
+                expires: LoginAttempt::EXPIRATION.from_now,
+                httponly: true,
+                secure: Rails.env.production?,
+                same_site: :lax
             }
 
-            login_code = Identity::V2LoginCode.create!(identity: @identity)
+            login_code = Identity::V2LoginCode.generate(@identity, ip_address: request.remote_ip, user_agent: request.user_agent)
             if defined?(IdentityMailer)
                 LoopsLoginCodeJob.perform_later(login_code.id)
             end
@@ -176,6 +183,25 @@ class IdentitiesController < ApplicationController
         end
 
         OnboardingScenarios::DefaultJoin
+    end
+
+    def prefill_from_oauth_return_to
+        return {} unless params[:return_to].present?
+        return {} unless params[:return_to].start_with?("/oauth/authorize")
+
+        uri = URI.parse(params[:return_to])
+        query = URI.decode_www_form(uri.query || "").to_h
+
+        {
+          primary_email: query["email"].presence || query["login_hint"].presence,
+          first_name: query["first_name"].presence,
+          last_name: query["last_name"].presence,
+          country: query["country"].presence,
+          birthday: query["birthday"].presence,
+          phone_number: query["phone_number"].presence
+        }.compact
+    rescue URI::InvalidURIError
+        {}
     end
 
     def scenario_from_oauth_return_to

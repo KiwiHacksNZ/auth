@@ -33,6 +33,8 @@ module DeletionService
     log.call "created: #{identity.created_at.strftime("%Y-%m-%d")}"
     log.call ""
 
+    deferred_attachments = []
+
     ActiveRecord::Base.transaction do
       log.call "step 1: locking account..."
       identity.lock_account! unless identity.locked?
@@ -53,9 +55,10 @@ module DeletionService
       ].each { |assoc| counts[assoc.klass.name.demodulize.underscore.pluralize.to_sym] = assoc.destroy_all.size }
       log.call "  destroyed: #{counts.select { |_, v| v > 0 }.map { |k, v| "#{v} #{k}" }.join(", ").presence || "nothing"}"
 
-      log.call "step 3: purging document files..."
-      doc_count = purge_attachments(identity)
-      log.call "  purged #{doc_count} #{"attachment".pluralize(doc_count)}" if doc_count > 0
+      log.call "step 3: collecting attachment references (purge deferred until after commit)..."
+      deferred_attachments = collect_attachments(identity)
+      log.call "  found #{deferred_attachments.size} #{"attachment".pluralize(deferred_attachments.size)}" if deferred_attachments.any?
+      detach_attachments(identity)
 
       log.call "step 4: scrubbing associated record PII..."
       addr_count = 0
@@ -73,6 +76,14 @@ module DeletionService
         record.update_columns(name: "[REDACTED]", date_of_birth: nil, raw_json_response: nil)
         aadhaar_count += 1
       end
+      Verification.with_deleted.where(identity_id: identity.id)
+        .update_all(
+          internal_rejection_comment: nil,
+          rejection_reason_details: nil,
+          aadhaar_hc_transaction_id: nil,
+          aadhaar_external_transaction_id: nil,
+          aadhaar_link: nil
+        )
       log.call "  scrubbed #{addr_count} #{"address".pluralize(addr_count)}, #{aadhaar_count} aadhaar"
 
       log.call "step 5: destroying resemblances..."
@@ -143,6 +154,17 @@ module DeletionService
       )
     end
 
+    if deferred_attachments.any?
+      log.call "step 14b: purging #{deferred_attachments.size} collected attachments from storage..."
+      deferred_attachments.each do |blob|
+        blob.purge
+      rescue Aws::S3::Errors::ServiceError => e
+        Rails.logger.warn "DeletionService: failed to purge blob #{blob.id}: #{e.message}"
+        blob.destroy
+      end
+      log.call "  done"
+    end
+
     log.call ""
     log.call "done. identity #{identity.id} (#{identity.public_id}) has been tombstoned."
 
@@ -199,6 +221,26 @@ module DeletionService
     trackables
   end
 
+  def self.collect_attachments(identity)
+    blobs = []
+    identity.documents.with_deleted.each do |doc|
+      doc.files.each { |f| blobs << f.blob }
+    end
+    identity.vouch_verifications.with_deleted.each do |vv|
+      blobs << vv.evidence.blob if vv.evidence.attached?
+    end
+    blobs.compact
+  end
+
+  def self.detach_attachments(identity)
+    identity.documents.with_deleted.each do |doc|
+      doc.files.detach
+    end
+    identity.vouch_verifications.with_deleted.each do |vv|
+      vv.evidence.detach if vv.evidence.attached?
+    end
+  end
+
   def self.purge_attachments(identity)
     count = 0
     identity.documents.with_deleted.each do |doc|
@@ -239,8 +281,9 @@ module DeletionService
     return unless defined?(GoodJob::Job)
 
     GoodJob::Job.where(finished_at: nil).where(
-      "serialized_params::text LIKE ? OR serialized_params::text LIKE ?",
-      "%\"identity_id\":#{identity.id}%",
+      "serialized_params::text LIKE ? OR serialized_params::text LIKE ? OR serialized_params::text LIKE ?",
+      "%\"identity_id\": #{identity.id},%",
+      "%\"identity_id\": #{identity.id}}%",
       "%Identity/#{identity.id}\"%"
     ).find_each do |job|
       job.update_columns(finished_at: Time.current, error: "discarded by deletion_request")
@@ -282,5 +325,6 @@ module DeletionService
   end
 
   private_class_method :collect_version_items, :collect_activity_trackables, :purge_attachments,
-                       :purge_or_detach, :delete_versions, :discard_pending_jobs, :scrub_activities
+                       :purge_or_detach, :delete_versions, :discard_pending_jobs, :scrub_activities,
+                       :collect_attachments, :detach_attachments
 end

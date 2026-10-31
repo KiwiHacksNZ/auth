@@ -54,6 +54,7 @@ module DocsHelper
       "email" => "#0ea5e9",       # sky blue
       "name" => "#a855f7",        # purple
       "slack_id" => "#ec4899",    # pink
+      "discord_id" => "#6366f1",  # indigo
       "verification_status" => "#84cc16",  # lime
       "basic_info" => "#10b981",  # green
       "legal_name" => "#f59e0b",  # orange
@@ -63,7 +64,7 @@ module DocsHelper
     # Priority order for scopes (most specific first)
     # Community scopes (email, name, slack_id) are prioritized over HQ-only scopes
     # If a line appears in multiple scopes, use the first one in this list
-    scope_priority = [ "email", "name", "slack_id", "verification_status", "legal_name", "address", "basic_info" ]
+    scope_priority = [ "email", "name", "slack_id", "discord_id", "verification_status", "legal_name", "address", "basic_info" ]
 
     # Helper to normalize line for comparison (strip trailing comma)
     normalize_line = ->(line) { line.sub(/,\s*$/, "") }

@@ -20,6 +20,7 @@ class OAuthScope
     verification_status: "check",
     ysws_eligible: "check",
     slack_id: "slack",
+    discord_id: "message",
     legal_name: "card-id"
   }.freeze
 
@@ -103,6 +104,14 @@ class OAuthScope
       ]
     ),
     new(
+      name: "discord_id",
+      description: "See your Discord ID",
+      icon: "message",
+      consent_fields: [
+        { key: :discord_id, value: ->(ident) { ident.discord_id } }
+      ]
+    ),
+    new(
       name: "legal_name",
       description: "See your legal name",
       icon: "card-id",
@@ -125,7 +134,7 @@ class OAuthScope
 
   BY_NAME = ALL.index_by(&:name).freeze
 
-  COMMUNITY_ALLOWED = %w[openid profile email name slack_id verification_status].freeze
+  COMMUNITY_ALLOWED = %w[openid profile email name slack_id discord_id verification_status].freeze
   HQ_OFFICIAL_SCOPES = (COMMUNITY_ALLOWED + %w[basic_info birthdate phone address]).freeze
   SUPER_ADMIN_SCOPES = (HQ_OFFICIAL_SCOPES + %w[legal_name]).freeze
   # set_slack_id intentionally omitted from all tiers — valid but not assignable via UI

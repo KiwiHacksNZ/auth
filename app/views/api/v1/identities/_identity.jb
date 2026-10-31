@@ -37,6 +37,10 @@ scope "slack_id", identity: do
   ident[:slack_id] = identity.slack_id
 end
 
+scope "discord_id", identity: do
+  ident[:discord_id] = identity.discord_id
+end
+
 scope "legal_name", identity: do
   ident[:legal_first_name] = identity.legal_first_name
   ident[:legal_last_name] = identity.legal_last_name

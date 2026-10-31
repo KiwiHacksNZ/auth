@@ -5,7 +5,9 @@ class Rack::Attack
     end
   end
 
-  throttle("logins/ip", limit: 10, period: 5.minutes) do |req|
+  # Per-IP login limits are sized for a venue sharing one IP; the per-email and per-attempt
+  # throttles are what guard individual accounts.
+  throttle("logins/ip", limit: 100, period: 5.minutes) do |req|
     if req.path == "/login" && req.post?
       req.ip
     end
@@ -35,7 +37,7 @@ class Rack::Attack
     end
   end
 
-  throttle("login_verify/ip", limit: 20, period: 5.minutes) do |req|
+  throttle("login_verify/ip", limit: 200, period: 5.minutes) do |req|
     if req.path.match?(%r{^/login/.+/(verify|totp|backup_code)$}) && req.post?
       req.ip
     end
@@ -53,10 +55,19 @@ class Rack::Attack
     end
   end
 
-  throttle("signup/ip", limit: 5, period: 15.minutes) do |req|
-    if req.post? && (req.path == "/signup" || req.path == "/migrate" || req.path == "/slack" || req.path.match?(%r{^/join/}))
-      req.ip
+  # Students at an event sign up together from one venue or school IP, so the per-IP cap is
+  # sized for a room; the per-email throttle is what stops hammering a single address.
+  signup_request = ->(req) { req.post? && (req.path == "/signup" || req.path == "/migrate" || req.path == "/slack" || req.path.match?(%r{^/join/})) }
+
+  throttle("signup/email", limit: 5, period: 15.minutes) do |req|
+    if signup_request.call(req)
+      identity = req.params["identity"]
+      identity["primary_email"].to_s.strip.downcase.presence if identity.is_a?(Hash)
     end
+  end
+
+  throttle("signup/ip", limit: 100, period: 15.minutes) do |req|
+    req.ip if signup_request.call(req)
   end
 
   throttle("email_change/ip", limit: 3, period: 1.hour) do |req|
@@ -75,7 +86,8 @@ class Rack::Attack
     req.ip if req.path == "/oauth/token" && req.post?
   end
 
-  throttle("global/ip", limit: 1000, period: 1.hour) do |req|
+  # Generous on purpose: a whole event's worth of people can share one public IP.
+  throttle("global/ip", limit: 20_000, period: 1.hour) do |req|
     req.ip unless req.path.start_with?("/api/", "/oauth/")
   end
 

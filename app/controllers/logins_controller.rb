@@ -80,6 +80,8 @@ class LoginsController < ApplicationController
         login_code = Identity::V2LoginCode.active.where(purpose: "login").find_by(identity: @identity, code: code)
 
         unless login_code
+            return if followed_concurrent_verification
+
             track_event("login.code_failed", reason: "invalid", scenario: analytics_scenario_from_return_to(@attempt.return_to))
             flash.now[:error] = "Invalid or expired code, please try again"
             render :email, status: :unprocessable_entity
@@ -92,14 +94,27 @@ class LoginsController < ApplicationController
             return
         end
 
-        # Atomically consume the code to prevent race conditions
-        updated = Identity::V2LoginCode.where(id: login_code.id, used_at: nil).update_all(
-            used_at: Time.current,
-            ip_address: request.remote_ip.to_s,
-            user_agent: request.user_agent
-        )
+        # Consume the code and record the factor under the attempt's lock, so a concurrent submit
+        # either waits here or sees both changes committed and follows this one.
+        consumed = @attempt.with_lock do
+            next false unless @attempt.email_available?
 
-        unless updated == 1
+            updated = Identity::V2LoginCode.where(id: login_code.id, used_at: nil).update_all(
+                used_at: Time.current,
+                ip_address: request.remote_ip.to_s,
+                user_agent: request.user_agent
+            )
+            next false unless updated == 1
+
+            factors = (@attempt.authentication_factors || {}).dup
+            factors[:email] = true
+            @attempt.update!(authentication_factors: factors)
+            true
+        end
+
+        unless consumed
+            return if followed_concurrent_verification
+
             track_event("login.code_failed", reason: "used", scenario: analytics_scenario_from_return_to(@attempt.return_to))
             flash.now[:error] = "This code has already been used"
             render :email, status: :unprocessable_entity
@@ -107,10 +122,6 @@ class LoginsController < ApplicationController
         end
 
         track_event("login.code_verified", scenario: analytics_scenario_from_return_to(@attempt.return_to))
-
-        factors = (@attempt.authentication_factors || {}).dup
-        factors[:email] = true
-        @attempt.update!(authentication_factors: factors)
 
         # Check if authentication is complete
         handle_post_verification_redirect
@@ -406,6 +417,16 @@ class LoginsController < ApplicationController
 
         flash[:error] = "This login has already been completed"
         redirect_to login_path(return_to:)
+    end
+
+    # Another submit of this form already used the code for this attempt (double tap);
+    # send this request where that one went instead of showing a code error.
+    def followed_concurrent_verification
+        @attempt.reload
+        return false if @attempt.email_available?
+
+        @attempt.complete? ? redirect_completed_attempt : redirect_to_next_factor
+        true
     end
 
     def redirect_to_next_factor

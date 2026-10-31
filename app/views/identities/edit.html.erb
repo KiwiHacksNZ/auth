@@ -58,6 +58,27 @@
     <% end %>
   </section>
 
+  <section class="section-card">
+    <h3><%= t ".linked_accounts" %></h3>
+
+    <div>
+      <%= label_tag :slack_id, t(".slack") %>
+      <%= text_field_tag :slack_id, @identity.slack_id, readonly: true, autocomplete: "off", placeholder: t(".not_linked") %>
+    </div>
+
+    <div>
+      <%= label_tag :discord_id, t(".discord") %>
+      <%= text_field_tag :discord_id, @identity.discord_id, readonly: true, autocomplete: "off", placeholder: t(".not_linked") %>
+    </div>
+    <div class="form-actions" style="margin-top: 0.5rem;">
+      <% if @identity.discord_id.present? %>
+        <%= link_to t(".manage_discord"), discord_account_path, role: "button", class: "secondary" %>
+      <% else %>
+        <%= link_to t(".link_discord"), discord_account_path, role: "button" %>
+      <% end %>
+    </div>
+  </section>
+
   <%= form_with model: @identity, url: identity_path, method: :patch, local: true do |f| %>
     <section class="section-card">
       <h3><%= t(".developer_mode") %></h3>

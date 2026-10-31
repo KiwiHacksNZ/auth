@@ -277,6 +277,10 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :discord_account, path: "link/discord", only: [ :show, :create, :destroy ] do
+    get :callback
+  end
+
   resources :email_changes, only: [ :new, :create, :show ] do
     member do
       get :cancel, action: :cancel_confirmation

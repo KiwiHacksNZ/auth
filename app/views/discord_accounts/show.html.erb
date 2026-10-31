@@ -1,0 +1,37 @@
+<% content_for :title, t(".title") %>
+<div class="page-header">
+  <h1><%= t ".title" %></h1>
+</div>
+
+<div class="page-sections">
+  <section class="section-card">
+    <% if @identity.discord_id.present? %>
+      <h3><%= t ".linked_heading" %></h3>
+      <p><%= t ".linked_description" %></p>
+      <%= text_field_tag :discord_id, @identity.discord_id, readonly: true, autocomplete: "off", "aria-label": t(".discord_id") %>
+      <div class="form-actions">
+        <%= button_to t(".unlink"), discord_account_path, method: :delete,
+                      form: { data: { "hx-confirm": t(".unlink_confirmation") } },
+                      class: "danger" %>
+      </div>
+    <% else %>
+      <h3><%= t ".unlinked_heading" %></h3>
+      <p><%= t ".unlinked_description" %></p>
+      <ul>
+        <li><%= t ".shares_id" %></li>
+        <li><%= t ".shares_apps" %></li>
+      </ul>
+      <% if DiscordService.configured? %>
+        <div class="form-actions">
+          <%= button_to t(".link"), discord_account_path, method: :post %>
+        </div>
+      <% else %>
+        <div class="banner warning"><%= t ".not_configured" %></div>
+      <% end %>
+    <% end %>
+  </section>
+
+  <div>
+    <%= link_to t(".back"), edit_identity_path %>
+  </div>
+</div>

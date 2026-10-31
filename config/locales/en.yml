@@ -382,6 +382,29 @@ en:
     scopes: Permissions
     revoke_confirmation: Are you sure you want to revoke access for %{app}? This cannot be undone, and things may break if you do.
     revoke: Revoke
+  discord_accounts:
+    show:
+      title: Discord
+      discord_id: Discord ID
+      linked_heading: Your Discord account is linked
+      linked_description: Apps you sign in to with KiwiHacks Account can see this Discord ID if you let them.
+      unlink: Unlink Discord
+      unlink_confirmation: Unlink your Discord account? Apps won't see your Discord ID any more.
+      unlinked_heading: Link your Discord account
+      unlinked_description: "You'll be sent to Discord to approve this. We only ask Discord for your basic profile:"
+      shares_id: We save your Discord user ID, nothing else.
+      shares_apps: Apps you sign in to with KiwiHacks Account can see your Discord ID, but only if they ask and you agree.
+      link: Continue to Discord
+      not_configured: Discord linking isn't set up on this server yet.
+      back: "← Back to account settings"
+    callback:
+      cancelled: Discord linking was cancelled.
+      invalid_state: That Discord link expired or didn't come from here. Please try again.
+      already_linked: That Discord account is already linked to a different KiwiHacks account.
+      success: "Linked your Discord account (%{username})!"
+      failed: We couldn't reach Discord to finish linking. Please try again.
+    destroy:
+      success: Unlinked your Discord account.
   identities:
     first_name: First name
     last_name: Last name
@@ -404,6 +427,12 @@ en:
       change_email: Change email
       super_secret_settings: "Super secret settings"
       saml_debug: "debug your SAML assertions?"
+      linked_accounts: Linked accounts
+      slack: Slack
+      discord: Discord
+      not_linked: Not linked
+      link_discord: Link Discord
+      manage_discord: Manage
     new:
       already_have: Already have a KiwiHacks Account account?
       log_in: Log in here

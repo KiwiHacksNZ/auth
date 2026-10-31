@@ -242,6 +242,34 @@ RSpec.describe "API::V1::Identities", type: :request do
         expect(json["identities"].length).to eq(1)
         expect(json["meta"]["next_page"]).to be_nil
       end
+
+      it "lists an identity once however many times it authorized the app" do
+        2.times do
+          Doorkeeper::AccessGrant.create!(
+            resource_owner: identity1,
+            application: program,
+            token: SecureRandom.hex(32),
+            expires_in: 600,
+            redirect_uri: program.redirect_uri,
+            scopes: "basic_info"
+          )
+        end
+
+        get "/api/v1/identities", params: { per_page: 1 }, headers: { "Authorization" => "Bearer #{program.program_key}" }
+        first_page = JSON.parse(response.body)
+        get "/api/v1/identities", params: { per_page: 1, page: 2 }, headers: { "Authorization" => "Bearer #{program.program_key}" }
+        second_page = JSON.parse(response.body)
+
+        expect(first_page["meta"]).to include("total_count" => 2, "total_pages" => 2)
+        ids = (first_page["identities"] + second_page["identities"]).map { |i| i["id"] }
+        expect(ids).to contain_exactly(identity1.public_id, identity2.public_id)
+      end
+
+      it "uses the default page size when per_page is blank" do
+        get "/api/v1/identities", params: { per_page: "" }, headers: { "Authorization" => "Bearer #{program.program_key}" }
+
+        expect(JSON.parse(response.body)["meta"]["per_page"]).to eq(100)
+      end
     end
 
     context "with OAuth token" do

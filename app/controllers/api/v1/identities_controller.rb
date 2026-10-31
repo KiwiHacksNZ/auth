@@ -28,8 +28,11 @@ module API
 
       def index
         raise Pundit::NotAuthorizedError unless acting_as_program
-        @identities = ident_scope.includes(:access_tokens, :addresses, :verifications)
-          .page(params[:page]).per((params[:per_page]&.to_i || 100).clamp(1, 100))
+        # ident_scope has a row per access grant, so select identities by id to list each one once,
+        # and order them so pages don't overlap or skip anyone.
+        @identities = Identity.where(id: ident_scope.select(:id)).order(:id)
+          .includes(:access_tokens, :addresses, :verifications)
+          .page(params[:page]).per((params[:per_page].presence&.to_i || 100).clamp(1, 100))
         render :index
       end
 

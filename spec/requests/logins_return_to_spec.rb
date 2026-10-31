@@ -12,6 +12,14 @@ RSpec.describe "Logins return_to", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:current_identity).and_return(identity)
   end
 
+  describe "visiting a signed-in page while logged out" do
+    it "passes a relative return_to so interrupted logins can still follow it" do
+      get discord_account_path(source: "mclink")
+
+      expect(response).to redirect_to(welcome_path(return_to: "/link/discord?source=mclink"))
+    end
+  end
+
   describe "visiting the login page while already signed in" do
     before { sign_in_as(identity) }
 

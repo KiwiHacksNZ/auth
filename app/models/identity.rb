@@ -23,11 +23,13 @@
 #  updated_at                    :datetime         not null
 #  primary_address_id            :bigint
 #  slack_id                      :string
+#  discord_id                    :string
 #
 # Indexes
 #
 #  index_identities_on_aadhaar_number_bidx  (aadhaar_number_bidx) UNIQUE
 #  index_identities_on_deleted_at           (deleted_at)
+#  index_identities_on_discord_id           (discord_id)
 #  index_identities_on_primary_address_id   (primary_address_id)
 #  index_identities_on_slack_id             (slack_id)
 #

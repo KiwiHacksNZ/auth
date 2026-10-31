@@ -7,6 +7,7 @@ FactoryBot.define do
     country { "NZ" }
     phone_number { "+64211234567" }
     sequence(:slack_id) { |n| "U#{n.to_s.rjust(8, '0')}" }
+    sequence(:discord_id) { |n| (100_000_000_000_000_000 + n).to_s }
     ysws_eligible { true }
     legal_first_name { "Hakkuun" }
     legal_last_name { "[WOULDN'T YOU LIKE TO KNOW]" }

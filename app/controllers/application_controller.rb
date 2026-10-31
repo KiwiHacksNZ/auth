@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
       if request.xhr?
         redirect_to welcome_path
       else
-        redirect_to welcome_path(return_to: request.original_url)
+        redirect_to welcome_path(return_to: request.fullpath)
       end
     end
   end

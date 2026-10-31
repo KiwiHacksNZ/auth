@@ -12,6 +12,14 @@ RSpec.describe "Logins return_to", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:current_identity).and_return(identity)
   end
 
+  describe "visiting a signed-in page while logged out" do
+    it "passes a relative return_to so interrupted logins can still follow it" do
+      get discord_account_path(source: "mclink")
+
+      expect(response).to redirect_to(welcome_path(return_to: "/link/discord?source=mclink"))
+    end
+  end
+
   describe "visiting the login page while already signed in" do
     before { sign_in_as(identity) }
 
@@ -60,6 +68,42 @@ RSpec.describe "Logins return_to", type: :request do
 
       post verify_login_attempt_path(id: attempt.to_param), params: { code: }
       expect(response).to redirect_to(oauth_return_to)
+    end
+  end
+
+  describe "submitting the email code twice at the same time" do
+    # Simulates the first submit finishing between this request loading the attempt and
+    # looking up its code.
+    def finish_concurrently(attempt, code)
+      allow(Identity::V2LoginCode).to receive(:active).and_wrap_original do |original|
+        code.update_columns(used_at: Time.current)
+        attempt.update!(authentication_factors: { email: true })
+        original.call
+      end
+    end
+
+    it "sends the second submit on to the client app instead of a code error" do
+      attempt = start_attempt
+      code = Identity::V2LoginCode.generate(identity)
+      finish_concurrently(attempt, code)
+
+      post verify_login_attempt_path(id: attempt.to_param), params: { code: code.code }
+
+      expect(response).to redirect_to(login_path(return_to: oauth_return_to))
+      expect(flash[:error]).not_to eq("Invalid or expired code, please try again")
+    end
+
+    it "sends the second submit to the next factor when 2FA is still needed" do
+      totp = identity.totps.create!
+      totp.mark_verified!
+      identity.update!(use_two_factor_authentication: true)
+      attempt = start_attempt
+      code = Identity::V2LoginCode.generate(identity)
+      finish_concurrently(attempt, code)
+
+      post verify_login_attempt_path(id: attempt.to_param), params: { code: code.code }
+
+      expect(response).to redirect_to(totp_login_attempt_path(id: attempt.to_param))
     end
   end
 

@@ -27,6 +27,16 @@ Rails.application.config.to_prepare do
     end
   end
 
+  # Redirect URIs went unvalidated while this was disabled, so only check them when they
+  # change; otherwise apps registered back then could never be saved again.
+  Doorkeeper::RedirectUriValidator.prepend(Module.new do
+    def validate_each(record, attribute, value)
+      return if record.persisted? && !record.will_save_change_to_attribute?(attribute)
+
+      super
+    end
+  end)
+
   # Fix public_activity 3.0.2 crash when `parameters` column contains
   # raw strings instead of YAML-deserialized hashes.
   PublicActivity::Activity.prepend(Module.new do

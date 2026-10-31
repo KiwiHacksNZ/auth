@@ -228,6 +228,20 @@ RSpec.describe "API::V1::Identities", type: :request do
         expect(ident2).not_to have_key("first_name")
         expect(ident2["legal_first_name"]).to eq(identity2.legal_first_name)
       end
+
+      it "pages results and says where the next page is" do
+        get "/api/v1/identities", params: { per_page: 1 }, headers: { "Authorization" => "Bearer #{program.program_key}" }
+
+        json = JSON.parse(response.body)
+        expect(json["identities"].length).to eq(1)
+        expect(json["meta"]).to include("page" => 1, "per_page" => 1, "total_count" => 2, "total_pages" => 2, "next_page" => 2)
+
+        get "/api/v1/identities", params: { per_page: 1, page: 2 }, headers: { "Authorization" => "Bearer #{program.program_key}" }
+
+        json = JSON.parse(response.body)
+        expect(json["identities"].length).to eq(1)
+        expect(json["meta"]["next_page"]).to be_nil
+      end
     end
 
     context "with OAuth token" do

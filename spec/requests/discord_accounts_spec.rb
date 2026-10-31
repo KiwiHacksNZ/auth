@@ -143,6 +143,119 @@ RSpec.describe "DiscordAccounts", type: :request do
     end
   end
 
+  describe "?return_to=" do
+    let(:resume) { "https://mc.kiwihacks.com/link/resume?player=abc" }
+
+    before { create(:program, redirect_uri: "https://mc.kiwihacks.com/oauth/callback") }
+
+    it "sends people back to an official app after they link Discord" do
+      stub_discord
+      get discord_account_path(return_to: resume)
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(resume)
+      expect(identity.reload.discord_id).to eq("123456789012345678")
+    end
+
+    it "sends people who already have Discord linked straight back" do
+      identity.update!(discord_id: "123456789012345678")
+
+      get discord_account_path(return_to: resume)
+
+      expect(response).to redirect_to(resume)
+    end
+
+    it "ignores hosts that aren't an official app's" do
+      stub_discord
+      get discord_account_path(return_to: "https://evil.example/link")
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(discord_account_path)
+    end
+
+    it "ignores non-http URLs on an official host" do
+      identity.update!(discord_id: "123456789012345678")
+
+      get discord_account_path(return_to: "javascript://mc.kiwihacks.com/%0aalert(1)")
+
+      expect(response.location).not_to start_with("javascript")
+    end
+  end
+
+  describe "GET /portal/discord" do
+    let(:return_to) { "https://mc.kiwihacks.com/link/resume" }
+
+    before { create(:program, redirect_uri: "https://mc.kiwihacks.com/oauth/callback") }
+
+    it "asks people without Discord linked to link it" do
+      get portal_discord_path(return_to:)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(discord_account_path)
+    end
+
+    it "sends people who already have Discord linked straight back" do
+      identity.update!(discord_id: "123456789012345678")
+
+      get portal_discord_path(return_to:)
+
+      expect(response).to redirect_to("#{return_to}?portal_status=linked")
+    end
+
+    it "sends people back once they link Discord" do
+      stub_discord
+      get portal_discord_path(return_to:)
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+      expect(response).to redirect_to(portal_discord_path)
+      follow_redirect!
+
+      expect(response).to redirect_to("#{return_to}?portal_status=linked")
+      expect(identity.reload.discord_id).to eq("123456789012345678")
+    end
+
+    it "keeps people on the portal page if linking fails" do
+      allow(DiscordService).to receive(:fetch_user).and_raise(DiscordService::Error, "down")
+      get portal_discord_path(return_to:)
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(portal_discord_path)
+      expect(flash[:error]).to be_present
+    end
+
+    it "sends people back as canceled when they go back without linking" do
+      get portal_discord_path(return_to:)
+
+      delete portal_discord_path
+
+      expect(response).to redirect_to("#{return_to}?portal_status=canceled")
+    end
+
+    it "rejects a return_to that isn't an official app's" do
+      get portal_discord_path(return_to: "https://evil.example/")
+
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "stops returning to the portal once the account page is opened directly" do
+      stub_discord
+      get portal_discord_path(return_to:)
+      get discord_account_path
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(discord_account_path)
+    end
+  end
+
   describe "DELETE /link/discord" do
     it "clears the Discord ID" do
       identity.update!(discord_id: "123456789012345678")

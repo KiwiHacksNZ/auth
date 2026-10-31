@@ -798,3 +798,8 @@ en:
         add_new: Add a new address
         add_button: Add Address
         done: Done
+    discord_accounts:
+      portal:
+        title: Link your Discord account
+        subtitle: This app needs your Discord account linked to your KiwiHacks account.
+        cancel: "← Go back without linking"

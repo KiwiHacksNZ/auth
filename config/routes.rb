@@ -343,6 +343,8 @@ Rails.application.routes.draw do
     get "address", to: "addresses#portal"
     post "address", to: "addresses#create"
     get "address/done", to: "addresses#done", as: :address_done
+    get "discord", to: "discord_accounts#portal"
+    delete "discord", to: "discord_accounts#cancel"
   end
 
   resources :identity_sessions, only: [ :index, :destroy ] do

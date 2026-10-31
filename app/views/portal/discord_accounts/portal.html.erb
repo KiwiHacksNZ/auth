@@ -1,0 +1,29 @@
+<% content_for :title, t(".title") %>
+<% content_for(:portal_wrapper, true) %>
+<div class="container-sm">
+  <div class="page-header-centered">
+    <h1><%= t ".title" %></h1>
+    <p><%= t ".subtitle" %></p>
+  </div>
+
+  <div class="page-sections">
+    <section class="section-card">
+      <p><%= t "discord_accounts.show.unlinked_description" %></p>
+      <ul>
+        <li><%= t "discord_accounts.show.shares_id" %></li>
+        <li><%= t "discord_accounts.show.shares_apps" %></li>
+      </ul>
+      <% if DiscordService.configured? %>
+        <div class="form-actions">
+          <%= button_to t("discord_accounts.show.link"), discord_account_path, method: :post %>
+        </div>
+      <% else %>
+        <div class="banner warning"><%= t "discord_accounts.show.not_configured" %></div>
+      <% end %>
+    </section>
+
+    <div>
+      <%= button_to t(".cancel"), portal_discord_path, method: :delete, class: "secondary" %>
+    </div>
+  </div>
+</div>

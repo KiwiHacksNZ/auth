@@ -119,6 +119,15 @@ used for `encrypts` fields (like aadhaar data). generate these with `bin/rails d
 | `SLACK_SIGNING_SECRET` | webhook request verification |
 | `SLACK_ADULT_WEBHOOK_URL` | webhook for guardian notifications |
 
+### discord linking
+
+create an application at https://discord.com/developers/applications and add `<host>/link/discord/callback` under OAuth2 → Redirects. no bot or intents needed.
+
+| var | description |
+|-----|-------------|
+| `DISCORD_CLIENT_ID` | OAuth2 client ID |
+| `DISCORD_CLIENT_SECRET` | OAuth2 client secret |
+
 ### SAML
 
 | var | description |

@@ -1,6 +1,17 @@
 class DiscordAccountsController < ApplicationController
+  # Apps that send people here with ?source= to link Discord, and where to send them back.
+  # A fixed list rather than a return_to URL, so this can't be used as an open redirect.
+  RETURN_TO = {
+    "mclink" => "https://mc.kiwihacks.com/link/resume"
+  }.freeze
+
   def show
     @identity = current_identity
+    session[:discord_link_source] = params[:source].presence_in(RETURN_TO.keys)
+
+    if @identity.discord_id.present? && (url = return_url)
+      redirect_to url, allow_other_host: true
+    end
   end
 
   def create
@@ -34,6 +45,9 @@ class DiscordAccountsController < ApplicationController
 
     if current_identity.update(discord_id:)
       current_identity.create_activity :link_discord, owner: current_identity, recipient: current_identity
+      if (url = return_url)
+        return redirect_to url, allow_other_host: true
+      end
       flash[:success] = t(".success", username: user["global_name"].presence || user["username"])
     else
       flash[:error] = current_identity.errors.full_messages.to_sentence
@@ -53,4 +67,8 @@ class DiscordAccountsController < ApplicationController
     end
     redirect_to discord_account_path
   end
+
+  private
+
+  def return_url = RETURN_TO[session.delete(:discord_link_source)]
 end

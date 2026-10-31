@@ -89,6 +89,60 @@ RSpec.describe "DiscordAccounts", type: :request do
     end
   end
 
+  describe "?source=mclink" do
+    let(:mc_resume) { "https://mc.kiwihacks.com/link/resume" }
+
+    it "sends people back to Minecraft linking after they link Discord" do
+      stub_discord
+      get discord_account_path(source: "mclink")
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(mc_resume)
+      expect(identity.reload.discord_id).to eq("123456789012345678")
+    end
+
+    it "sends people who already have Discord linked straight back" do
+      identity.update!(discord_id: "123456789012345678")
+
+      get discord_account_path(source: "mclink")
+
+      expect(response).to redirect_to(mc_resume)
+    end
+
+    it "ignores unknown sources" do
+      stub_discord
+      get discord_account_path(source: "https://evil.example")
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(discord_account_path)
+    end
+
+    it "forgets the source when the page is opened again without one" do
+      stub_discord
+      get discord_account_path(source: "mclink")
+      get discord_account_path
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(discord_account_path)
+    end
+
+    it "stays on the page if linking fails" do
+      allow(DiscordService).to receive(:fetch_user).and_raise(DiscordService::Error, "down")
+      get discord_account_path(source: "mclink")
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(discord_account_path)
+    end
+  end
+
   describe "DELETE /link/discord" do
     it "clears the Discord ID" do
       identity.update!(discord_id: "123456789012345678")

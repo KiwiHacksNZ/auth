@@ -88,8 +88,7 @@ class LoginsController < ApplicationController
 
         # Ensure this login attempt hasn't already created a session
         if @attempt.session.present?
-            flash[:error] = "This login has already been completed"
-            redirect_to login_attempt_path(id: @attempt.to_param)
+            redirect_completed_attempt
             return
         end
 
@@ -117,7 +116,7 @@ class LoginsController < ApplicationController
         handle_post_verification_redirect
     rescue SessionsHelper::AccountLockedError => e
         flash[:error] = e.message
-        redirect_to login_path
+        redirect_to login_path(return_to: url_from(@attempt.return_to))
     end
 
     def resend
@@ -245,8 +244,13 @@ class LoginsController < ApplicationController
         @identity = @attempt.identity
         @onboarding_scenario = @identity.onboarding_scenario_instance
     rescue ActiveRecord::RecordNotFound
+        # The attempt may have just been completed by a double submit or have expired;
+        # keep its return_to so the user still ends up back at the client app.
+        return_to = url_from(LoginAttempt.find_by_hashid(params[:id])&.return_to)
+        return redirect_to return_to if identity_signed_in? && return_to
+
         flash[:error] = "Invalid login attempt, please start again"
-        redirect_to login_path
+        redirect_to login_path(return_to:)
     end
 
     def already_logged_in
@@ -263,13 +267,13 @@ class LoginsController < ApplicationController
         cookie_token = cookies.signed["browser_token_#{@attempt.to_param}"]
         unless cookie_token
             flash[:error] = "This doesn't seem to be the browser who began this login; please ensure cookies are enabled"
-            redirect_to login_path
+            redirect_to login_path(return_to: url_from(@attempt.return_to))
             return false
         end
 
         unless ActiveSupport::SecurityUtils.secure_compare(@attempt.browser_token, cookie_token)
             flash[:error] = "Browser token mismatch; please ensure cookies are enabled"
-            redirect_to login_path
+            redirect_to login_path(return_to: url_from(@attempt.return_to))
             return false
         end
 
@@ -308,10 +312,7 @@ class LoginsController < ApplicationController
         LoginAttempt.transaction do
             @attempt.lock!
 
-            if @attempt.session_id.present?
-                flash[:error] = "This login has already been completed"
-                return redirect_to login_attempt_path(id: @attempt.to_param)
-            end
+            return redirect_completed_attempt if @attempt.session_id.present?
 
             @attempt.mark_complete! if @attempt.may_mark_complete?
 
@@ -398,6 +399,15 @@ class LoginsController < ApplicationController
         end
     end
 
+    # Another submit already finished this login; send the user where that one went.
+    def redirect_completed_attempt
+        return_to = url_from(@attempt.return_to)
+        return redirect_to(return_to || root_path) if identity_signed_in?
+
+        flash[:error] = "This login has already been completed"
+        redirect_to login_path(return_to:)
+    end
+
     def redirect_to_next_factor
         available = @attempt.available_factors
 
@@ -410,7 +420,7 @@ class LoginsController < ApplicationController
         else
             # No available factors - this shouldn't happen
             flash[:error] = "Unable to complete authentication"
-            redirect_to login_path
+            redirect_to login_path(return_to: url_from(@attempt.return_to))
         end
     end
 

@@ -190,7 +190,7 @@ class StepUpController < ApplicationController
       credential = current_identity.webauthn_credentials.find_by(id: credential_id) if credential_id
       if credential
         credential.destroy
-        TwoFactorMailer.authentication_method_disabled(current_identity).deliver_later
+        LoopsTwoFactorMethodDisabledJob.perform_later(current_identity.id)
 
         if current_identity.two_factor_methods.empty?
           current_identity.update!(use_two_factor_authentication: false)

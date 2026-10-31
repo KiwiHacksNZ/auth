@@ -36,7 +36,7 @@ class Identity::BackupCode < ApplicationRecord
       .update_all(aasm_state: "used", updated_at: Time.current) == 1
     reload
     identity.create_activity :use_backup_code, owner: identity, recipient: identity
-    IdentityBackupCodeMailer.code_used(identity).deliver_later
+    LoopsBackupCodeUsedJob.perform_later(identity.id)
     true
   end
 end

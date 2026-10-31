@@ -161,7 +161,9 @@ Fields returned depend on your program's configured scopes.
 
 ### GET /api/v1/identities
 
-List all identities that have authorized your application.
+List all identities that have authorized your application, 100 per page.
+
+**Query parameters:** `page` (default 1) and `per_page` (1–100, default 100). Keep requesting `meta.next_page` until it is `null`.
 
 <%= render Components::APIExample.new(method: "GET", url: api_v1_identities_url, path_only: true) %>
 
@@ -171,9 +173,9 @@ List all identities that have authorized your application.
 
 ```json
 <%
-  identities = [
+  identities = Kaminari.paginate_array([
     FactoryBot.build_stubbed(:identity, first_name: "Kiki", last_name: "Latta"),
     FactoryBot.build_stubbed(:identity, last_name: "Wofford")
-  ]
+  ]).page(1).per(100)
 %><%= render_api_example(template: "api/v1/identities/index", identities: identities) %>
 ```

@@ -1,3 +1,10 @@
 {
-  identities: @identities.map { |identity| render(identity) }
+  identities: @identities.map { |identity| render(identity) },
+  meta: {
+    page: @identities.current_page,
+    per_page: @identities.limit_value,
+    total_count: @identities.total_count,
+    total_pages: @identities.total_pages,
+    next_page: @identities.next_page
+  }
 }

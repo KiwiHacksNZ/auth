@@ -19,7 +19,7 @@ RSpec.describe "AuthorizedApplications", type: :request do
 
       get authorized_applications_path
       expect(response).to have_http_status(:ok)
-      expect(response.body.scan(program.name).size).to eq(1)
+      expect(response.body.scan(%(<div class="session-device">#{program.name}</div>)).size).to eq(1)
     end
   end
 

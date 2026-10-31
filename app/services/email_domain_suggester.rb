@@ -39,7 +39,7 @@ class EmailDomainSuggester
     best_distance = MAX_DISTANCE + 1
 
     COMMON_DOMAINS.each do |known|
-      distance = DamerauLevenshtein.distance(domain, known)
+      distance = MiniLevenshtein.edit_distance(domain, known)
       if distance <= MAX_DISTANCE && distance < best_distance
         best_distance = distance
         best_match = known

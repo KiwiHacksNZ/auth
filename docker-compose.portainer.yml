@@ -21,9 +21,12 @@ services:
       retries: 5
 
   web:
+    # web and worker run the same image, so it's built once (here) per deploy.
+    image: kiwihacks-auth:latest
     build:
       context: .
       dockerfile: Dockerfile
+    pull_policy: build
     restart: unless-stopped
     volumes:
       - /opt/kiwihacks-auth/stack.env:/run/secrets/stack.env:ro
@@ -45,9 +48,8 @@ services:
       - "127.0.0.1:8080:80"
 
   worker:
-    build:
-      context: .
-      dockerfile: Dockerfile.worker
+    image: kiwihacks-auth:latest
+    pull_policy: never
     restart: unless-stopped
     volumes:
       - /opt/kiwihacks-auth/stack.env:/run/secrets/stack.env:ro

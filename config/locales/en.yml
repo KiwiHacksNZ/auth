@@ -383,6 +383,8 @@ en:
     revoke_confirmation: Are you sure you want to revoke access for %{app}? This cannot be undone, and things may break if you do.
     revoke: Revoke
   discord_accounts:
+    required_by_app: "%{app} needs your Discord account. Link it to carry on signing in."
+    this_app: This app
     show:
       title: Discord
       discord_id: Discord ID

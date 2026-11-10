@@ -15,7 +15,7 @@
       </ul>
       <% if DiscordService.configured? %>
         <div class="form-actions">
-          <%= button_to t("discord_accounts.show.link"), discord_account_path, method: :post %>
+          <%= button_to t("discord_accounts.show.link"), discord_account_path, method: :post, params: { portal: 1 } %>
         </div>
       <% else %>
         <div class="banner warning"><%= t "discord_accounts.show.not_configured" %></div>

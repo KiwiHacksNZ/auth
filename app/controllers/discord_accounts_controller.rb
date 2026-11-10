@@ -3,13 +3,13 @@ class DiscordAccountsController < ApplicationController
 
   # Older ?source= shortcuts, kept so existing links keep working. New apps pass
   # ?return_to= with a URL on one of their official redirect URI hosts instead.
+  # mclink is the KiwiHacks Link Velocity plugin, which resumes sign-in at /login/resume.
   SOURCES = {
-    "mclink" => "https://mc.kiwihacks.com/link/resume"
+    "mclink" => "https://play.kiwihacks.com/login/resume"
   }.freeze
 
   def show
     @identity = current_identity
-    session.delete(:discord_link_portal)
     session[:discord_link_return_to] = validated_return_url || SOURCES[params[:source]]
 
     if @identity.discord_id.present? && (url = return_url)
@@ -18,15 +18,20 @@ class DiscordAccountsController < ApplicationController
   end
 
   def create
+    # ?portal=1 comes from the /portal/discord page. It's kept only for this one round
+    # trip to Discord, so someone who leaves the portal page isn't sent back to it later.
+    @from_portal = params[:portal].present?
     return redirect_to(link_page_path) unless DiscordService.configured?
 
     state = SecureRandom.hex(24)
     session[:discord_oauth_state] = state
+    session[:discord_link_portal] = @from_portal
     redirect_to DiscordService.authorize_url(redirect_uri: callback_discord_account_url, state:), allow_other_host: true
   end
 
   def callback
     expected_state = session.delete(:discord_oauth_state)
+    @from_portal = session.delete(:discord_link_portal)
 
     if params[:error].present?
       flash[:info] = t(".cancelled")
@@ -49,7 +54,7 @@ class DiscordAccountsController < ApplicationController
     if current_identity.update(discord_id:)
       current_identity.create_activity :link_discord, owner: current_identity, recipient: current_identity
       # The portal page sends people back to their app now that Discord is linked.
-      return redirect_to portal_discord_path if session[:discord_link_portal]
+      return redirect_to portal_discord_path if @from_portal
       if (url = return_url)
         return redirect_to url, allow_other_host: true
       end
@@ -77,5 +82,5 @@ class DiscordAccountsController < ApplicationController
 
   def return_url = session.delete(:discord_link_return_to)
 
-  def link_page_path = session[:discord_link_portal] ? portal_discord_path : discord_account_path
+  def link_page_path = @from_portal ? portal_discord_path : discord_account_path
 end

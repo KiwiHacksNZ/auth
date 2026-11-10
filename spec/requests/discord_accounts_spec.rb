@@ -11,8 +11,8 @@ RSpec.describe "DiscordAccounts", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:current_identity).and_return(identity)
   end
 
-  def start_link
-    post discord_account_path
+  def start_link(**params)
+    post discord_account_path(params)
     Rack::Utils.parse_query(URI.parse(response.location).query)["state"]
   end
 
@@ -90,7 +90,7 @@ RSpec.describe "DiscordAccounts", type: :request do
   end
 
   describe "?source=mclink" do
-    let(:mc_resume) { "https://mc.kiwihacks.com/link/resume" }
+    let(:mc_resume) { "https://play.kiwihacks.com/login/resume" }
 
     it "sends people back to Minecraft linking after they link Discord" do
       stub_discord
@@ -144,9 +144,9 @@ RSpec.describe "DiscordAccounts", type: :request do
   end
 
   describe "?return_to=" do
-    let(:resume) { "https://mc.kiwihacks.com/link/resume?player=abc" }
+    let(:resume) { "https://play.kiwihacks.com/login/resume?player=abc" }
 
-    before { create(:program, redirect_uri: "https://mc.kiwihacks.com/oauth/callback") }
+    before { create(:program, redirect_uri: "https://play.kiwihacks.com/oauth/callback") }
 
     it "sends people back to an official app after they link Discord" do
       stub_discord
@@ -177,19 +177,28 @@ RSpec.describe "DiscordAccounts", type: :request do
       expect(response).to redirect_to(discord_account_path)
     end
 
+    it "ignores plain http URLs in production" do
+      identity.update!(discord_id: "123456789012345678")
+      allow(Rails).to receive(:env).and_return(ActiveSupport::EnvironmentInquirer.new("production"))
+
+      get discord_account_path(return_to: "http://play.kiwihacks.com/login/resume")
+
+      expect(response).not_to be_redirect
+    end
+
     it "ignores non-http URLs on an official host" do
       identity.update!(discord_id: "123456789012345678")
 
-      get discord_account_path(return_to: "javascript://mc.kiwihacks.com/%0aalert(1)")
+      get discord_account_path(return_to: "javascript://play.kiwihacks.com/%0aalert(1)")
 
       expect(response.location).not_to start_with("javascript")
     end
   end
 
   describe "GET /portal/discord" do
-    let(:return_to) { "https://mc.kiwihacks.com/link/resume" }
+    let(:return_to) { "https://play.kiwihacks.com/login/resume" }
 
-    before { create(:program, redirect_uri: "https://mc.kiwihacks.com/oauth/callback") }
+    before { create(:program, redirect_uri: "https://play.kiwihacks.com/oauth/callback") }
 
     it "asks people without Discord linked to link it" do
       get portal_discord_path(return_to:)
@@ -209,7 +218,7 @@ RSpec.describe "DiscordAccounts", type: :request do
     it "sends people back once they link Discord" do
       stub_discord
       get portal_discord_path(return_to:)
-      state = start_link
+      state = start_link(portal: 1)
 
       get callback_discord_account_path(code: "abc", state:)
       expect(response).to redirect_to(portal_discord_path)
@@ -222,7 +231,7 @@ RSpec.describe "DiscordAccounts", type: :request do
     it "keeps people on the portal page if linking fails" do
       allow(DiscordService).to receive(:fetch_user).and_raise(DiscordService::Error, "down")
       get portal_discord_path(return_to:)
-      state = start_link
+      state = start_link(portal: 1)
 
       get callback_discord_account_path(code: "abc", state:)
 
@@ -244,10 +253,29 @@ RSpec.describe "DiscordAccounts", type: :request do
       expect(response).to redirect_to(root_path)
     end
 
-    it "stops returning to the portal once the account page is opened directly" do
+    it "keeps people on the portal page if they cancel on Discord" do
+      get portal_discord_path(return_to:)
+      state = start_link(portal: 1)
+
+      get callback_discord_account_path(error: "access_denied", state:)
+
+      expect(response).to redirect_to(portal_discord_path)
+    end
+
+    it "doesn't return to the portal after an abandoned portal visit" do
       stub_discord
       get portal_discord_path(return_to:)
-      get discord_account_path
+      state = start_link
+
+      get callback_discord_account_path(code: "abc", state:)
+
+      expect(response).to redirect_to(discord_account_path)
+    end
+
+    it "only returns to the portal for the link it started" do
+      stub_discord
+      get portal_discord_path(return_to:)
+      start_link(portal: 1)
       state = start_link
 
       get callback_discord_account_path(code: "abc", state:)

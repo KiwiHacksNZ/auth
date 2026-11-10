@@ -1,18 +1,11 @@
 class Portal::DiscordAccountsController < Portal::BaseController
   def portal
     @identity = current_identity
+    return redirect_to_portal_return(status: :linked) if @identity.discord_id.present?
 
-    if @identity.discord_id.present?
-      session.delete(:discord_link_portal)
-      return redirect_to_portal_return(status: :linked)
-    end
-
-    # Linking finishes in DiscordAccountsController#callback, which sends people back here.
-    session[:discord_link_portal] = true
+    # The link button posts with portal=1, and DiscordAccountsController#callback
+    # sends people back here once Discord is linked, which returns them to their app.
   end
 
-  def cancel
-    session.delete(:discord_link_portal)
-    cancel_portal_flow
-  end
+  def cancel = cancel_portal_flow
 end

@@ -1,8 +1,11 @@
 class DiscordAccountsController < ApplicationController
   include ProgramReturnUrl
+  include SafeUrlValidation
 
   # Older ?source= shortcuts, kept so existing links keep working. New apps pass
   # ?return_to= with a URL on one of their official redirect URI hosts instead.
+  # A same-site path (e.g. an /oauth/authorize request waiting on Discord) is
+  # accepted too.
   # mclink is the KiwiHacks Link Velocity plugin, which resumes sign-in at /login/resume.
   SOURCES = {
     "mclink" => "https://play.kiwihacks.com/login/resume"
@@ -10,7 +13,7 @@ class DiscordAccountsController < ApplicationController
 
   def show
     @identity = current_identity
-    session[:discord_link_return_to] = validated_return_url || SOURCES[params[:source]]
+    session[:discord_link_return_to] = url_from(params[:return_to]) || validated_return_url || SOURCES[params[:source]]
 
     if @identity.discord_id.present? && (url = return_url)
       redirect_to url, allow_other_host: true

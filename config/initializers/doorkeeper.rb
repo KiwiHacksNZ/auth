@@ -19,8 +19,18 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    if current_identity
-      current_identity
+    identity = current_identity
+    if identity && identity.discord_id.blank? && params[:scope].to_s.split.include?("discord_id")
+      # The app needs a Discord ID, so link Discord first. /link/discord sends people
+      # back to this exact request (state, nonce, PKCE and all) once it's linked. A POST
+      # (the consent form) has no query string to return to, so it just goes to linking.
+      app = Program.find_by(uid: params[:client_id].to_s)
+      flash[:info] = I18n.t("discord_accounts.required_by_app", app: app&.name || I18n.t("discord_accounts.this_app"))
+      return_to = request.get? ? request.fullpath : nil
+      redirect_to "/link/discord#{"?#{{ return_to: }.to_query}" if return_to}"
+      nil
+    elsif identity
+      identity
     else
       redirect_to "/oauth/welcome?return_to=#{CGI.escape(request.fullpath)}"
       nil

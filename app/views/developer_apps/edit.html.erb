@@ -114,7 +114,7 @@
       </section>
     </div>
 
-    <%= render "discord_requirement", f: f if policy(@app).update_requires_discord? %>
+    <%= render "sign_in_requirements", f: f if policy(@app).update_sign_in_requirements? %>
 
     <%# === Card 4: Admin Settings (if applicable) === %>
     <% if policy(@app).update_byline? || policy(@app).update_onboarding_scenario? || policy(@app).update_active? || policy(@app).update_whoami? %>

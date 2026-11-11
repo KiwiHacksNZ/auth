@@ -281,6 +281,10 @@ Rails.application.routes.draw do
     get :callback
   end
 
+  resource :slack_account, path: "link/slack", only: [ :show, :create ] do
+    get :callback
+  end
+
   resources :email_changes, only: [ :new, :create, :show ] do
     member do
       get :cancel, action: :cancel_confirmation

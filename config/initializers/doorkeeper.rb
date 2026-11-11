@@ -20,15 +20,20 @@ Doorkeeper.configure do
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
     identity = current_identity
-    app = Program.find_by(uid: params[:client_id].to_s) if identity && identity.discord_id.blank?
-    if app&.requires_discord? && !request.delete?
-      # The app requires Discord ("Require Discord" in its settings), so link Discord
-      # first. /link/discord sends people back to this exact request (state, nonce, PKCE
-      # and all) once it's linked. A POST (the consent form) has no query string to
-      # return to, so it just goes to linking. DELETE (deny) is let through.
-      flash[:info] = I18n.t("discord_accounts.required_by_app", app: app.name)
+    app = Program.find_by(uid: params[:client_id].to_s) if identity && !request.delete?
+    # Accounts the app requires ("Sign-in requirements" in its settings) that this
+    # person hasn't linked yet. Discord comes first if both are missing.
+    missing = []
+    missing << :discord if app&.requires_discord? && identity.discord_id.blank?
+    missing << :slack if app&.requires_slack? && identity.slack_id.blank?
+    if (service = missing.first)
+      # Link it first. /link/<service> sends people back to this exact request (state,
+      # nonce, PKCE and all), which then checks the next one. A POST (the consent form)
+      # has no query string to return to, so it just goes to linking. DELETE (deny)
+      # is let through.
+      flash[:info] = I18n.t("#{service}_accounts.required_by_app", app: app.name)
       return_to = request.get? ? request.fullpath : nil
-      redirect_to "/link/discord#{"?#{{ return_to: }.to_query}" if return_to}"
+      redirect_to "/link/#{service}#{"?#{{ return_to: }.to_query}" if return_to}"
       nil
     elsif identity
       identity

@@ -35,6 +35,10 @@
           <% end %>
         </span>
       </div>
+      <div class="app-meta-row">
+        <span class="meta-label"><%= t("developer_apps.discord_requirement.show_label") %></span>
+        <span class="meta-value"><%= t(@app.requires_discord? ? "developer_apps.discord_requirement.required" : "developer_apps.discord_requirement.not_required") %></span>
+      </div>
       <% if @app.onboarding_scenario.present? %>
         <div class="app-meta-row">
           <span class="meta-label"><%= t(".onboarding_scenario") %></span>

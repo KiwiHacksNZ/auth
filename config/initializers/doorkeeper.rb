@@ -20,12 +20,13 @@ Doorkeeper.configure do
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
     identity = current_identity
-    if identity && identity.discord_id.blank? && params[:scope].to_s.split.include?("discord_id")
-      # The app needs a Discord ID, so link Discord first. /link/discord sends people
-      # back to this exact request (state, nonce, PKCE and all) once it's linked. A POST
-      # (the consent form) has no query string to return to, so it just goes to linking.
-      app = Program.find_by(uid: params[:client_id].to_s)
-      flash[:info] = I18n.t("discord_accounts.required_by_app", app: app&.name || I18n.t("discord_accounts.this_app"))
+    app = Program.find_by(uid: params[:client_id].to_s) if identity && identity.discord_id.blank?
+    if app&.requires_discord? && !request.delete?
+      # The app requires Discord ("Require Discord" in its settings), so link Discord
+      # first. /link/discord sends people back to this exact request (state, nonce, PKCE
+      # and all) once it's linked. A POST (the consent form) has no query string to
+      # return to, so it just goes to linking. DELETE (deny) is let through.
+      flash[:info] = I18n.t("discord_accounts.required_by_app", app: app.name)
       return_to = request.get? ? request.fullpath : nil
       redirect_to "/link/discord#{"?#{{ return_to: }.to_query}" if return_to}"
       nil

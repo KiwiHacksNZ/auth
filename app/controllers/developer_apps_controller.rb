@@ -169,6 +169,10 @@ class DeveloperAppsController < ApplicationController
       permitted << :active
     end
 
+    if policy(@app || Program.new).update_requires_discord?
+      permitted << :requires_discord
+    end
+
     if policy(@app || Program.new).update_whoami?
       permitted << :whoami_enabled
       permitted << :whoami_allowed_origin

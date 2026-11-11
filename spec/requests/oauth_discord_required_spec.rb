@@ -1,11 +1,11 @@
 require "rails_helper"
 
-RSpec.describe "OAuth apps that request discord_id", type: :request do
+RSpec.describe "OAuth apps that require Discord", type: :request do
   let(:identity) { create(:identity, discord_id: nil) }
   let(:discord_user) { { "id" => "123456789012345678", "username" => "kiki", "global_name" => "Kiki" } }
   let(:program) do
     create(:program, name: "KiwiHacks Minecraft", redirect_uri: "https://play.kiwihacks.com/login/callback",
-                     scopes: "openid profile discord_id")
+                     scopes: "openid profile discord_id", requires_discord: true)
   end
   let(:authorize_params) do
     {
@@ -92,10 +92,26 @@ RSpec.describe "OAuth apps that request discord_id", type: :request do
     expect(response).to have_http_status(:ok)
   end
 
-  it "leaves apps that don't request discord_id alone" do
-    get "/oauth/authorize?#{authorize_params.merge(scope: "openid profile").to_query}"
+  it "still requires Discord when the app doesn't request discord_id" do
+    path = "/oauth/authorize?#{authorize_params.merge(scope: "openid profile").to_query}"
+    get path
+
+    expect(response).to redirect_to("/link/discord?#{{ return_to: path }.to_query}")
+  end
+
+  it "goes straight to consent for an app that requests discord_id without requiring it" do
+    program.update!(requires_discord: false)
+
+    get authorize_path
 
     expect(response).to have_http_status(:ok)
+  end
+
+  it "lets people deny an app that requires Discord without linking it" do
+    delete "/oauth/authorize", params: authorize_params
+
+    expect(response.location).to start_with("https://play.kiwihacks.com/login/callback?error=access_denied")
+    expect(response.location).to include("state=st4te")
   end
 
   it "only follows same-site paths on /link/discord" do

@@ -1,0 +1,13 @@
+<%# Sign-in requirements card, shared by the new and edit forms. %>
+<section class="section-card">
+  <h3><%= t("developer_apps.discord_requirement.heading") %></h3>
+  <div class="field-group">
+    <label class="checkbox-label">
+      <%= f.check_box :requires_discord %>
+      <div>
+        <span><%= t("developer_apps.discord_requirement.label") %></span>
+        <small><%= t("developer_apps.discord_requirement.hint") %></small>
+      </div>
+    </label>
+  </div>
+</section>

@@ -37,6 +37,7 @@ class Program < ApplicationRecord
   audit_field :onboarding_scenario, transform: ->(v) { v&.titleize }
   audit_field :whoami_enabled, type: :boolean
   audit_field :whoami_allowed_origin
+  audit_field :requires_discord, type: :boolean, label: "require Discord"
 
   COLLABORATOR_ACTIVITY_KEYS = %w[
     program.collaborator_invited

@@ -104,6 +104,8 @@
         <% end %>
       </section>
     </div>
+
+    <%= render "discord_requirement", f: f if policy(@app).update_requires_discord? %>
   </div>
 
   <div class="form-actions">

@@ -153,4 +153,76 @@ RSpec.describe "Logins return_to", type: :request do
       expect(response).to redirect_to(login_path)
     end
   end
+
+  describe "submitting a login form whose CSRF token is stale" do
+    around do |example|
+      original = ActionController::Base.allow_forgery_protection
+      ActionController::Base.allow_forgery_protection = true
+      example.run
+    ensure
+      ActionController::Base.allow_forgery_protection = original
+    end
+
+    it "restarts the login with return_to instead of going home" do
+      post login_path(return_to: oauth_return_to), params: { email: identity.primary_email, authenticity_token: "stale" }
+
+      expect(response).to redirect_to(login_path(return_to: oauth_return_to, email: identity.primary_email))
+      expect(flash[:error]).to eq("Your login session expired, please try again")
+    end
+
+    it "keeps the attempt's return_to when the code form is stale" do
+      attempt = start_attempt
+
+      post verify_login_attempt_path(id: attempt.to_param), params: { code: "123456", authenticity_token: "stale" }
+
+      expect(response).to redirect_to(login_path(return_to: oauth_return_to))
+    end
+
+    it "drops an off-site return_to" do
+      post login_path(return_to: "https://evil.example/phish"), params: { email: identity.primary_email, authenticity_token: "stale" }
+
+      expect(response).to redirect_to(login_path(email: identity.primary_email))
+    end
+
+    it "keeps a SAML app's return_to when the email form is stale" do
+      saml_return_to = "/saml/auth?SAMLRequest=fZJdT8IwFIb%2FStN7tsGEQCMSTaQ"
+
+      post login_path(return_to: saml_return_to), params: { email: identity.primary_email, authenticity_token: "stale" }
+
+      expect(response).to redirect_to(login_path(return_to: saml_return_to, email: identity.primary_email))
+    end
+
+    it "keeps return_to when a new user's signup form is stale" do
+      post signup_path, params: { return_to: oauth_return_to, identity: { primary_email: "new@example.com" }, authenticity_token: "stale" }
+
+      expect(response).to redirect_to(signup_path(return_to: oauth_return_to))
+      expect(flash[:error]).to eq("Your signup session expired, please try again")
+    end
+
+    it "keeps every authorize parameter when another app's consent form is stale" do
+      sign_in_as(identity)
+      program = create(:program, redirect_uri: "https://play.kiwihacks.com/login/callback", scopes: "openid profile")
+      consent = {
+        client_id: program.uid, redirect_uri: program.redirect_uri, response_type: "code", scope: "openid profile",
+        state: "st4te", nonce: "n0nce", code_challenge: "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM", code_challenge_method: "S256"
+      }
+
+      post oauth_authorization_path, params: consent.merge(authenticity_token: "stale")
+
+      expect(response).to redirect_to("/oauth/authorize?#{consent.to_query}")
+    end
+
+    it "shows the consent screen again when the consent form is stale" do
+      sign_in_as(identity)
+      program = create(:program, redirect_uri: "https://nest.kiwihacks.com/callback", scopes: "openid profile email")
+      consent = { client_id: program.uid, redirect_uri: program.redirect_uri, response_type: "code", scope: "openid profile email", state: "st4te" }
+
+      post oauth_authorization_path, params: consent.merge(authenticity_token: "stale")
+
+      expect(response).to redirect_to("/oauth/authorize?#{consent.to_query}")
+      follow_redirect!
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Continue to #{program.name}?")
+    end
+  end
 end

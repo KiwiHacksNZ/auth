@@ -15,6 +15,20 @@ Rails.application.config.to_prepare do
     layout "logged_out"
     after_action :track_oauth_denied, only: :destroy
 
+    AUTHORIZE_PARAMS = %i[client_id redirect_uri state response_type response_mode scope nonce code_challenge code_challenge_method].freeze
+
+    # A stale consent form fails the CSRF check, and the app-wide handler would send the
+    # user to our home page instead of back to the client app. Show the consent screen
+    # again for the same request instead; Doorkeeper re-validates every parameter.
+    rescue_from ActionController::InvalidAuthenticityToken do
+      query = params.permit(*AUTHORIZE_PARAMS).to_h.compact_blank
+      if query[:client_id].present?
+        redirect_to "#{oauth_authorization_path}?#{query.to_query}", status: :see_other
+      else
+        redirect_to root_path
+      end
+    end
+
     private
 
     def track_oauth_denied

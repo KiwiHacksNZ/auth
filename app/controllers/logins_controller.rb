@@ -13,6 +13,17 @@ class LoginsController < ApplicationController
     before_action :validate_browser_token, except: [ :new, :create ]
     before_action :ensure_no_user!
 
+    # A stale form (a page restored from cache, or a session cookie the browser didn't keep)
+    # fails the CSRF check. The app-wide handler would send the user home and drop the
+    # login's return_to, so they'd sign in and land on our home page instead of the client
+    # app. Restart the login with return_to intact instead.
+    rescue_from ActionController::InvalidAuthenticityToken do
+        return_to = url_from(params[:return_to]) ||
+            (params[:id] && url_from(LoginAttempt.find_by_hashid(params[:id])&.return_to))
+        flash[:error] = "Your login session expired, please try again"
+        redirect_to login_path(return_to:, email: params[:email].presence), status: :see_other
+    end
+
     def new
         @prefill_email = params[:email] if params[:email].present?
     end

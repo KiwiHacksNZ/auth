@@ -11,6 +11,16 @@ class IdentitiesController < ApplicationController
 
     helper_method :portal_onboarding_scenario
 
+    # A stale signup form fails the CSRF check; the app-wide handler would send the new user
+    # to our home page and drop return_to, so they'd never get back to the app they came
+    # from. Show the signup form again with return_to intact instead.
+    rescue_from ActionController::InvalidAuthenticityToken do
+        next redirect_to(root_path, flash: { error: "Something went wrong. Please try again." }) unless action_name == "create"
+
+        flash[:error] = "Your signup session expired, please try again"
+        redirect_to signup_path(return_to: url_from(params[:return_to])), status: :see_other
+    end
+
     def edit
         @identity = current_identity
     end

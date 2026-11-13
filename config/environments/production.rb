@@ -54,9 +54,9 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "auth.kiwihacks.org" }
+  config.action_mailer.default_url_options = { host: "account.kiwihacks.com" }
 
-  Rails.application.routes.default_url_options[:host] =  "auth.kiwihacks.org"
+  Rails.application.routes.default_url_options[:host] =  "account.kiwihacks.com"
 
   # Amazon SES SMTP settings
   config.action_mailer.delivery_method = :smtp

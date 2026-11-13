@@ -67,7 +67,7 @@ module IdentityVault
                          httponly: true,
                          same_site: :lax
 
-    # Disabled until auth.kiwihacks.org DNS is live — otherwise IP/Tailscale access 301s to a dead domain.
+    # Disabled until account.kiwihacks.com DNS is live — otherwise IP/Tailscale access 301s to a dead domain.
     # config.middleware.insert_before 0, DomainRedirect if Rails.env.production?
 
     config.audits1984.base_controller_class = "Backend::NoAuthController"

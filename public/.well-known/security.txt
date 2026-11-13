@@ -1,4 +1,4 @@
 Contact: mailto:niko@kiwihacks.org
 Expires: 2027-01-01T00:00:00.000Z
 Preferred-Languages: en
-Canonical: https://auth.kiwihacks.org/.well-known/security.txt
+Canonical: https://account.kiwihacks.com/.well-known/security.txt

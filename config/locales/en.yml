@@ -150,6 +150,19 @@ en:
     logout: Sign out
     backend: Admin
   developer_apps:
+    sign_in_requirements:
+      heading: Sign-in requirements
+      intro: People missing a required account are asked to link it before they can authorize this app, then carried on to it. Leave these off if your app works without them, even if it requests the matching scope.
+      required: Required to sign in
+      not_required: Not required
+      discord:
+        label: Require a linked Discord account
+        hint: Pair with the discord_id scope to receive their Discord user ID.
+        show_label: Discord
+      slack:
+        label: Require a linked Slack account
+        hint: Pair with the slack_id scope to receive their Slack user ID.
+        show_label: Slack
     index:
       title: Your Apps
       title_admin: All Apps
@@ -382,6 +395,28 @@ en:
     scopes: Permissions
     revoke_confirmation: Are you sure you want to revoke access for %{app}? This cannot be undone, and things may break if you do.
     revoke: Revoke
+  slack_accounts:
+    required_by_app: "%{app} needs your Slack account. Link it to carry on signing in."
+    show:
+      title: Slack
+      slack_id: Slack user ID
+      linked_heading: Your Slack account is linked
+      linked_description: Apps you sign in to with KiwiHacks Account can see this Slack user ID if you let them.
+      unlink_note: Linked the wrong account? Contact an organiser to unlink it.
+      unlinked_heading: Link your Slack account
+      unlinked_description: "You'll be sent to Slack to sign in to the KiwiHacks workspace and approve this:"
+      shares_id: We save your Slack user ID, nothing else.
+      shares_apps: Apps you sign in to with KiwiHacks Account can see your Slack user ID, but only if they ask and you agree.
+      link: Continue to Slack
+      not_configured: Slack linking isn't set up on this server yet.
+      back: "← Back to account settings"
+    callback:
+      cancelled: Slack linking was cancelled.
+      invalid_state: That Slack link expired or didn't come from here. Please try again.
+      already_linked: That Slack account is already linked to a different KiwiHacks account.
+      wrong_workspace: That Slack account isn't in the KiwiHacks workspace. Sign in to the KiwiHacks workspace and try again.
+      success: "Linked your Slack account (%{name})!"
+      failed: We couldn't reach Slack to finish linking. Please try again.
   discord_accounts:
     required_by_app: "%{app} needs your Discord account. Link it to carry on signing in."
     this_app: This app
@@ -434,6 +469,8 @@ en:
       discord: Discord
       not_linked: Not linked
       link_discord: Link Discord
+      link_slack: Link Slack
+      manage_slack: Manage Slack
       manage_discord: Manage
     new:
       already_have: Already have a KiwiHacks Account account?

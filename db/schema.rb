@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_31_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_11_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -549,6 +549,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_31_000001) do
     t.string "byline"
     t.boolean "whoami_enabled", default: false, null: false
     t.string "whoami_allowed_origin"
+    t.boolean "requires_discord", default: false, null: false
+    t.boolean "requires_slack", default: false, null: false
     t.index ["owner_identity_id"], name: "index_oauth_applications_on_owner_identity_id"
     t.index ["program_key_bidx"], name: "index_oauth_applications_on_program_key_bidx", unique: true
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true

@@ -104,6 +104,8 @@
         <% end %>
       </section>
     </div>
+
+    <%= render "sign_in_requirements", f: f if policy(@app).update_sign_in_requirements? %>
   </div>
 
   <div class="form-actions">

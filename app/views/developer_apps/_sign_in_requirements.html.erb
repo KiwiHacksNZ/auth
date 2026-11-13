@@ -1,0 +1,16 @@
+<%# Sign-in requirements card, shared by the new and edit forms. %>
+<section class="section-card">
+  <h3><%= t("developer_apps.sign_in_requirements.heading") %></h3>
+  <p><small class="usn"><%= t("developer_apps.sign_in_requirements.intro") %></small></p>
+  <% %i[discord slack].each do |service| %>
+    <div class="field-group">
+      <label class="checkbox-label">
+        <%= f.check_box :"requires_#{service}" %>
+        <div>
+          <span><%= t("developer_apps.sign_in_requirements.#{service}.label") %></span>
+          <small><%= t("developer_apps.sign_in_requirements.#{service}.hint") %></small>
+        </div>
+      </label>
+    </div>
+  <% end %>
+</section>

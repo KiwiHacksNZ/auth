@@ -1,0 +1,33 @@
+<% content_for :title, t(".title") %>
+<div class="page-header">
+  <h1><%= t ".title" %></h1>
+</div>
+
+<div class="page-sections">
+  <section class="section-card">
+    <% if @identity.slack_id.present? %>
+      <h3><%= t ".linked_heading" %></h3>
+      <p><%= t ".linked_description" %></p>
+      <%= text_field_tag :slack_id, @identity.slack_id, readonly: true, autocomplete: "off", "aria-label": t(".slack_id") %>
+      <p><small class="usn"><%= t ".unlink_note" %></small></p>
+    <% else %>
+      <h3><%= t ".unlinked_heading" %></h3>
+      <p><%= t ".unlinked_description" %></p>
+      <ul>
+        <li><%= t ".shares_id" %></li>
+        <li><%= t ".shares_apps" %></li>
+      </ul>
+      <% if SlackSignInService.configured? %>
+        <div class="form-actions">
+          <%= button_to t(".link"), slack_account_path, method: :post %>
+        </div>
+      <% else %>
+        <div class="banner warning"><%= t ".not_configured" %></div>
+      <% end %>
+    <% end %>
+  </section>
+
+  <div>
+    <%= link_to t(".back"), edit_identity_path %>
+  </div>
+</div>

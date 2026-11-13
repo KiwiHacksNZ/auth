@@ -96,7 +96,7 @@ class Identity < ApplicationRecord
   validate :validate_email_not_tombstoned, if: -> { new_record? || primary_email_changed? }
   validate :country_not_sanctioned, if: -> { new_record? || country_changed? }
 
-  validates :slack_id, uniqueness: { conditions: -> { where(deleted_at: nil) } }, format: { with: /\AU[A-Z0-9]+\z/ }, allow_blank: true
+  validates :slack_id, uniqueness: { conditions: -> { where(deleted_at: nil) } }, format: { with: /\A[UW][A-Z0-9]+\z/ }, allow_blank: true
   validates :discord_id, uniqueness: { conditions: -> { where(deleted_at: nil) } }, format: { with: /\A\d{17,20}\z/ }, allow_blank: true
   validates :aadhaar_number, uniqueness: true, allow_blank: true
   validates :aadhaar_number, format: { with: /\A\d{12}\z/, message: "must be 12 digits" }, if: -> { aadhaar_number.present? }

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Developer apps: Require Discord setting", type: :request do
+RSpec.describe "Developer apps: sign-in requirements", type: :request do
   let(:owner) { create(:identity, :developer) }
   let(:program) do
     create(:program, owner_identity: owner, trust_level: :community_untrusted,
@@ -32,12 +32,25 @@ RSpec.describe "Developer apps: Require Discord setting", type: :request do
     expect(program.reload.requires_discord?).to be(false)
   end
 
+  it "lets the owner require Slack too" do
+    get edit_developer_app_path(program)
+    expect(response.body).to include("program[requires_slack]")
+
+    patch developer_app_path(program), params: { program: { name: program.name, requires_slack: "1" } }
+
+    expect(program.reload.requires_slack?).to be(true)
+    expect(program.requires_discord?).to be(false)
+    get developer_app_path(program)
+    expect(response.body).to match(/Slack.*Required to sign in/m)
+  end
+
   it "doesn't let someone who can't edit the app change it" do
     other = create(:identity, :developer)
     allow_any_instance_of(ApplicationController).to receive(:current_identity).and_return(other)
 
-    patch developer_app_path(program), params: { program: { name: program.name, requires_discord: "1" } }
+    patch developer_app_path(program), params: { program: { name: program.name, requires_discord: "1", requires_slack: "1" } }
 
     expect(program.reload.requires_discord?).to be(false)
+    expect(program.requires_slack?).to be(false)
   end
 end

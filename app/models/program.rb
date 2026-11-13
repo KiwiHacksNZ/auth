@@ -38,6 +38,7 @@ class Program < ApplicationRecord
   audit_field :whoami_enabled, type: :boolean
   audit_field :whoami_allowed_origin
   audit_field :requires_discord, type: :boolean, label: "require Discord"
+  audit_field :requires_slack, type: :boolean, label: "require Slack"
 
   COLLABORATOR_ACTIVITY_KEYS = %w[
     program.collaborator_invited

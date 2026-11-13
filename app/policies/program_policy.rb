@@ -61,8 +61,9 @@ class ProgramPolicy < ApplicationPolicy
 
   def update_whoami? = admin?
 
-  # Anyone who can create or edit the app: it only changes who can sign in to that app.
-  def update_requires_discord? = record.new_record? ? create? : update?
+  # Require Discord / Slack. Anyone who can create or edit the app: it only changes
+  # who can sign in to that app.
+  def update_sign_in_requirements? = record.new_record? ? create? : update?
 
   def view_secret?
     owner? || admin? || collaborator?
